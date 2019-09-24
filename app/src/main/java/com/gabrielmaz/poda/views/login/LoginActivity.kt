@@ -13,7 +13,7 @@ class LoginActivity : AppCompatActivity(), LoginFragment.OnFragmentInteractionLi
             startActivity(Intent(this, SignupActivity::class.java))
             finish()
         } else {
-
+            
         }
     }
 

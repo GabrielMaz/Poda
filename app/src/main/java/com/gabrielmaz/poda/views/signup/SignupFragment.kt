@@ -2,33 +2,31 @@ package com.gabrielmaz.poda.views.signup
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.gabrielmaz.poda.R
+import com.gabrielmaz.poda.controllers.AuthController
 import com.gabrielmaz.poda.helpers.textString
 import com.gabrielmaz.poda.views.login.LoginFragment
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_signup.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.lang.Exception
+import kotlin.coroutines.CoroutineContext
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class SignupFragment : Fragment(), CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
 
-class SignupFragment : Fragment() {
-
-    private var param1: String? = null
-    private var param2: String? = null
+    private val authController = AuthController()
     private var listener: OnFragmentInteractionListener? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,11 +63,37 @@ class SignupFragment : Fragment() {
     }
 
     private fun signupButton() {
-        if (signup_name.textString() == ""
-            || login_email.textString() == ""
-            || login_password.textString() == ""
+        val name = signup_name.textString()
+        val email = signup_email.textString()
+        val password = signup_password.textString()
+        val passwordConfirmation = signup_password_confirmation.textString()
+
+        if (name == ""
+            || email == ""
+            || password == ""
+            || passwordConfirmation == ""
         ) {
+
+        } else if (password != passwordConfirmation) {
+
         } else {
+
+            launch(Dispatchers.IO) {
+                try {
+                    authController.signup(name, email, password, passwordConfirmation)
+                    withContext(Dispatchers.Main) {
+                        activity?.let {
+                            //                            it.startActivity(Intent(it, SignupActivity::class.java))
+                            it.finish()
+                            Toast.makeText(it, "Alto Signup", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } catch (exception: Exception) {
+                    Log.i("Algo", exception.message)
+                }
+            }
+
+
             listener?.onFragmentInteraction(
                 signup_name.textString(),
                 signup_email.textString(),
@@ -93,8 +117,6 @@ class SignupFragment : Fragment() {
         fun newInstance(param1: String, param2: String) =
             LoginFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
                 }
             }
     }
