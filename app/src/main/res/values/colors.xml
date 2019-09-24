@@ -3,4 +3,22 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="itemDescription">#3F3F3F</color>
+    <color name="itemPriority">#A0A0A0</color>
+
+    <!--  Categories  /-->
+    <color name="category_work">#FFFF5722</color>
+    <color name="category_study">#FF4CAF50</color>
+    <color name="category_purchases">#FF3F51B5</color>
+    <color name="category_leisure">#FF9C27B0</color>
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="light_gray">#d3d3d3</color>
+
+    <color name="light_blue">#00B0FF</color>
+    <color name="blue">#005b96</color>
+    <color name="dark_blue">#03396c</color>
+
 </resources>

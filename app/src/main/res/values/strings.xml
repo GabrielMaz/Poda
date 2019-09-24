@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">Poda</string>
+    <string name="app_name">PODA</string>
+
+    <string name="title_to_do_list">To Do List</string>
+
+    // General
+    <string name="email">Email</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign up</string>
+
 </resources>
