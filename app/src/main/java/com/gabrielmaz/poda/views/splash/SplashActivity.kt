@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.gabrielmaz.poda.R
+import com.gabrielmaz.poda.controllers.RetrofitController
+import com.gabrielmaz.poda.views.MainActivity
 import com.gabrielmaz.poda.views.login.LoginActivity
 import com.gabrielmaz.todolist.views.splash.SplashFragment
 
@@ -12,7 +14,13 @@ class SplashActivity : AppCompatActivity(),
     SplashFragment.OnFragmentInteractionListener {
     override fun onFragmentInteraction() {
         Handler().postDelayed({
-            startActivity(Intent(this, LoginActivity::class.java))
+
+            val intent = when {
+                RetrofitController.accessToken == null -> Intent(this, LoginActivity::class.java)
+                else -> Intent(this, MainActivity::class.java)
+            }
+
+            startActivity(intent)
             finish()
         }, 1500)
     }
