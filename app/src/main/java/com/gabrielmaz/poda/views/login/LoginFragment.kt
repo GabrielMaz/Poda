@@ -2,7 +2,6 @@ package com.gabrielmaz.poda.views.login
 
 import android.content.Context
 import android.content.Intent
-import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,13 +12,12 @@ import androidx.fragment.app.Fragment
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.controllers.AuthController
 import com.gabrielmaz.poda.helpers.textString
-import com.gabrielmaz.poda.views.signup.SignupActivity
+import com.gabrielmaz.poda.views.MainActivity
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
@@ -76,7 +74,7 @@ class LoginFragment : Fragment(), CoroutineScope {
                     authController.login(email, password)
                     withContext(Dispatchers.Main) {
                         activity?.let {
-                            //                            it.startActivity(Intent(it, SignupActivity::class.java))
+                            it.startActivity(Intent(it, MainActivity::class.java))
                             it.finish()
                             Toast.makeText(it, "Alto Login", Toast.LENGTH_SHORT).show()
                         }
