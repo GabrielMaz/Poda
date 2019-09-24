@@ -1,4 +1,4 @@
-package com.gabrielmaz.poda.views.login
+package com.gabrielmaz.poda.views.signup
 
 import android.content.Context
 import android.os.Bundle
@@ -9,12 +9,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.helpers.textString
+import com.gabrielmaz.poda.views.login.LoginFragment
 import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.android.synthetic.main.fragment_signup.*
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class LoginFragment : Fragment() {
+class SignupFragment : Fragment() {
 
     private var param1: String? = null
     private var param2: String? = null
@@ -33,18 +35,18 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        return inflater.inflate(R.layout.fragment_login, container, false)
+        return inflater.inflate(R.layout.fragment_signup, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        login_button.setOnClickListener {
-            loginButton()
+        signup_button.setOnClickListener {
+            signupButton()
         }
 
-        login_signup.setOnClickListener {
-            signupButton()
+        signup_login.setOnClickListener {
+            loginButton()
         }
     }
 
@@ -62,21 +64,27 @@ class LoginFragment : Fragment() {
         listener = null
     }
 
-    private fun loginButton() {
-        if (login_email.textString() == "" || login_password.textString() == "") {
-            Toast.makeText(activity, "Empty fields", Toast.LENGTH_SHORT).show()
+    private fun signupButton() {
+        if (signup_name.textString() == ""
+            || login_email.textString() == ""
+            || login_password.textString() == ""
+        ) {
         } else {
-            listener?.onFragmentInteraction(login_email.textString(), login_password.textString())
+            listener?.onFragmentInteraction(
+                signup_name.textString(),
+                signup_email.textString(),
+                signup_password.textString()
+            )
         }
     }
 
-    private fun signupButton() {
-        listener?.onFragmentInteraction("", "")
+    private fun loginButton() {
+        listener?.onFragmentInteraction("", "", "")
     }
 
     interface OnFragmentInteractionListener {
 
-        fun onFragmentInteraction(email: String, password: String)
+        fun onFragmentInteraction(name: String, email: String, password: String)
     }
 
     companion object {
