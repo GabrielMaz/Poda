@@ -11,16 +11,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 object RetrofitController {
-    var accessToken: String? = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHBpcmVzX29uIjoiMjAxOS0wOS0yNiAwMDo0Njo0MCArMDAwMCIsImV4cCI6MTU2OTQ1ODgwMX0.9JgVCRkCr2EQVEqjeYWGdrxR3TvaEzGj7DprpME6dmA"
+    //    var accessToken: String? = ""
+    var accessToken: String? = null
 
-    val retrofit= Retrofit.Builder()
-        .baseUrl("https://android-todos-api.herokuapp.com/")
+    val retrofit = Retrofit.Builder()
+        .baseUrl("https://android-todos-api.herokuapp.com")
         .addConverterFactory(gsonConverterFactory)
         .client(httpClient)
         .build()
 
     private val gsonConverterFactory
-        get() =GsonConverterFactory.create(
+        get() = GsonConverterFactory.create(
             GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(ZonedDateTime::class.java, ZonedDateTimeAdapter())
@@ -42,7 +43,7 @@ object RetrofitController {
                 if (accessToken != null) {
                     val request = chain.request()
                         .newBuilder()
-                        .addHeader("Authorization", accessToken)
+                        .addHeader("Authorization", accessToken ?: "")
                         .build()
 
                     chain.proceed(request)

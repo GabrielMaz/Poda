@@ -6,11 +6,12 @@ import retrofit2.http.Header
 import retrofit2.http.Path
 
 interface UserService {
-//    @GET("user/{userId}")
-//    suspend fun getUser(@Path("userId") userId: Int): User
-    @GET("user/5")
+    //    @GET("user/{userId}")
+    //    suspend fun getUser(@Path("userId") userId: Int): User
+    @GET("users/me")
     suspend fun getUser(
         @Header("Authorization") authorization: String?,
-        @Header("Content-Type") contentType: String): User
+        @Header("Content-Type") contentType: String
+    ): User
 
 }

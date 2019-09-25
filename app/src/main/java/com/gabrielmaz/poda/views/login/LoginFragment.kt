@@ -76,11 +76,10 @@ class LoginFragment : Fragment(), CoroutineScope {
                         activity?.let {
                             it.startActivity(Intent(it, MainActivity::class.java))
                             it.finish()
-                            Toast.makeText(it, "Alto Login", Toast.LENGTH_SHORT).show()
                         }
                     }
                 } catch (exception: Exception) {
-                    Log.i("Algo", exception.message)
+                    Log.i("login", exception.message)
                 }
             }
 

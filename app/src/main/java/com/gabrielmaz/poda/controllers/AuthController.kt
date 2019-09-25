@@ -14,7 +14,12 @@ class AuthController {
         RetrofitController.accessToken = response.authToken
     }
 
-    suspend fun signup(name: String, email: String, password: String, passwordConfirmation: String) {
+    suspend fun signup(
+        name: String,
+        email: String,
+        password: String,
+        passwordConfirmation: String
+    ) {
         val request = SignupRequest(name, email, password, passwordConfirmation)
         val response = authService.signup(request)
 

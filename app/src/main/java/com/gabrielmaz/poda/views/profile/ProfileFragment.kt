@@ -76,7 +76,7 @@ class ProfileFragment : Fragment(), CoroutineScope {
     private fun getUser() {
         launch(Dispatchers.IO) {
             try {
-                val user = userController.getUser(1)
+                val user = userController.getUser()
                 withContext(Dispatchers.Main) {
                     name.text = user.name
                     joined.text = user.createdAt.toString()
