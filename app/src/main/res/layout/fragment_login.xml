@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginStart="@dimen/horizontal_margin"
     android:layout_marginTop="@dimen/vertical_margin"
     android:layout_marginEnd="@dimen/horizontal_margin"
@@ -73,6 +74,16 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:textColor="@color/light_blue"/>
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/login_loading"
+            style="@style/SpinKitView.Large.WanderingCubes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/blue"
+            android:visibility="gone"
+            android:layout_margin="10dp"/>
 
     </LinearLayout>
 

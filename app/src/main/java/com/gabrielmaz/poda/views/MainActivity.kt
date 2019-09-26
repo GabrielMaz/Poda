@@ -1,11 +1,12 @@
 package com.gabrielmaz.poda.views
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.views.home.HomeFragment
 import com.gabrielmaz.poda.views.profile.ProfileFragment
+import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(),
@@ -18,6 +19,8 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+
+        main_loading.setIndeterminateDrawable(FadingCircle())
 
         showFragment(HomeFragment(), HomeFragmentTag)
         bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->

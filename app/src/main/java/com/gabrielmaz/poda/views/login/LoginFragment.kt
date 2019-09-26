@@ -11,8 +11,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.controllers.AuthController
+import com.gabrielmaz.poda.helpers.hideKeyboard
 import com.gabrielmaz.poda.helpers.textString
+import com.gabrielmaz.poda.helpers.visible
 import com.gabrielmaz.poda.views.MainActivity
+import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +42,11 @@ class LoginFragment : Fragment(), CoroutineScope {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        login_loading.setIndeterminateDrawable(FadingCircle())
+
         login_button.setOnClickListener {
+            login_password.hideKeyboard()
+            login_loading.visible()
             loginButton()
         }
 

@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".views.MainActivity">
 
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/main_loading"
+        style="@style/SpinKitView.Large.WanderingCubes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/blue"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
