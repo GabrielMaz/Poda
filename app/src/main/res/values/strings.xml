@@ -18,8 +18,10 @@
     <string name="categories">Categories</string>
     <string name="tasks">Tasks</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    // TodosFragment
+    <string name="fragment_todos_empty_view">You don\'t have any TODOs yet. \n  Press the Button to create your first one.</string>
+
+    // ProfileFragment
     <string name="profile_joined_on">Joined on</string>
     <string name="profile_categories_used">Categories used</string>
     <string name="profile_total_tasks">Total tasks</string>

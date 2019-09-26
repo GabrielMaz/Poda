@@ -77,7 +77,7 @@
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/login_loading"
-            style="@style/SpinKitView.Large.WanderingCubes"
+            style="@style/SpinKitView.WanderingCubes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

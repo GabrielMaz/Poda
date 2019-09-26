@@ -5,7 +5,7 @@ import org.threeten.bp.ZonedDateTime
 data class Todo(
     val id: Int,
     val description: String,
-    val completed: Boolean,
+    var completed: Boolean,
     val dueDate: ZonedDateTime,
     val priority: String,
     val createdAt: ZonedDateTime,
