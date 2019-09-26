@@ -9,10 +9,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.controllers.AuthController
 import com.gabrielmaz.poda.controllers.UserController
+import com.gabrielmaz.poda.models.User
 import com.gabrielmaz.poda.views.login.LoginActivity
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +30,7 @@ class ProfileFragment : Fragment(), CoroutineScope {
 
     private val userController = UserController()
     private val authController = AuthController()
+    private lateinit var user: User
 
     private var listener: OnFragmentInteractionListener? = null
 
@@ -76,14 +79,29 @@ class ProfileFragment : Fragment(), CoroutineScope {
     private fun getUser() {
         launch(Dispatchers.IO) {
             try {
-                val user = userController.getUser()
+                user = userController.getUser()
                 withContext(Dispatchers.Main) {
                     name.text = user.name
-                    joined.text = user.createdAt.toString()
-//                    categories.text =
-//                    total_tasks.text =
-//                    tasks_completed =
-//                    most_used_category =
+                    joined.text = "${user.createdAt.dayOfWeek},".substring(0,3).toLowerCase().capitalize() +
+                            " ${user.createdAt.dayOfMonth} " +
+                            "${user.createdAt.month} ".toLowerCase().capitalize() +
+                            "${user.createdAt.year}"
+
+
+
+
+                    categories.text = user.createdAt.dayOfMonth.toString()
+                    total_tasks.text = user.createdAt.dayOfWeek.toString()
+                    tasks_completed.text = user.createdAt.year.toString()
+                    most_used_category.text = user.createdAt.month.toString()
+
+                    Glide
+                        .with(this@ProfileFragment)
+                        .load(user.avatar)
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_placeholder)
+                        .into(image)
+
                 }
             } catch (exception: Exception) {
                 Log.i("asd", "asd")
