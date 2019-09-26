@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.gabrielmaz.poda.R
+import com.gabrielmaz.poda.views.home.HomeFragment
 import com.gabrielmaz.poda.views.profile.ProfileFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -18,12 +19,12 @@ class MainActivity : AppCompatActivity(),
 
         setContentView(R.layout.activity_main)
 
-        showFragment(ProfileFragment(), ProfileFragmentTag)
+        showFragment(HomeFragment(), HomeFragmentTag)
         bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             removeActiveFragment()
 
             when (menuItem.itemId) {
-                R.id.home -> showFragment(ProfileFragment(), HomeFragmentTag)
+                R.id.home -> showFragment(HomeFragment(), HomeFragmentTag)
                 R.id.tasks -> showFragment(ProfileFragment(), TasksFragmentTag)
                 R.id.categories -> showFragment(ProfileFragment(), CategoriesFragmentTag)
                 R.id.profile -> showFragment(ProfileFragment(), ProfileFragmentTag)
