@@ -14,9 +14,13 @@ import com.bumptech.glide.Glide
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.controllers.AuthController
 import com.gabrielmaz.poda.controllers.UserController
+import com.gabrielmaz.poda.helpers.hideKeyboard
+import com.gabrielmaz.poda.helpers.visible
 import com.gabrielmaz.poda.models.User
 import com.gabrielmaz.poda.views.MainActivity
 import com.gabrielmaz.poda.views.login.LoginActivity
+import com.github.ybq.android.spinkit.style.FadingCircle
+import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,16 +53,15 @@ class ProfileFragment : Fragment(), CoroutineScope {
 
         if (savedInstanceState == null) {
 
+            profile_loading.setIndeterminateDrawable(FadingCircle())
+
             setUserData()
 
             logout.setOnClickListener {
+                profile_loading.visible()
                 logout()
             }
         }
-    }
-
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction()
     }
 
     override fun onAttach(context: Context) {
@@ -87,13 +90,10 @@ class ProfileFragment : Fragment(), CoroutineScope {
                 "${user.createdAt.month} ".toLowerCase().capitalize() +
                 "${user.createdAt.year}"
 
-
-
-
         categories.text = user.createdAt.dayOfMonth.toString()
-        total_tasks.text = user.createdAt.dayOfWeek.toString()
-        tasks_completed.text = user.createdAt.year.toString()
-        most_used_category.text = user.createdAt.month.toString()
+        total_tasks.text = getCount(MainActivity.tasksTotal).toString()
+        tasks_completed.text = getCount(MainActivity.tasksCompleted).toString()
+        most_used_category.text = MainActivity.tasksTotal.maxBy { it.value }?.key.toString()
 
         Glide
             .with(this@ProfileFragment)
@@ -117,6 +117,12 @@ class ProfileFragment : Fragment(), CoroutineScope {
 
             }
         }
+    }
+
+    private fun getCount(map: HashMap<String, Int>): Int {
+        var acc = 0
+        map.forEach { task -> acc += task.value }
+        return acc
     }
 
     companion object {

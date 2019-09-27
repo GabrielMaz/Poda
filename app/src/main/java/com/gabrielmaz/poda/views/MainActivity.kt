@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope,
             try {
                 user = userController.getUser()
                 todos = todoController.getTodos()
+                getTasksCompleted()
 
                 withContext(Dispatchers.Main) {
                     setBottomNavigationBar()
@@ -102,6 +103,23 @@ class MainActivity : AppCompatActivity(), CoroutineScope,
         }
     }
 
+    private fun getTasksCompleted() {
+        todos.forEach { todo ->
+            if (tasksTotal[todo.category.name] == null) {
+                tasksTotal[todo.category.name] = 1
+            } else {
+                tasksTotal[todo.category.name] =+1
+            }
+            if (todo.completed) {
+                if(tasksCompleted[todo.category.name] == null) {
+                    tasksCompleted[todo.category.name] = 1
+                } else {
+                    tasksCompleted[todo.category.name] =+ 1
+                }
+            }
+        }
+    }
+
     companion object {
         private const val HomeFragmentTag = "HomeFragment"
         private const val TodosFragmentTag = "TodosFragment"
@@ -111,5 +129,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope,
         lateinit var user: User
         lateinit var todos: List<Todo>
         lateinit var categories: List<Category>
+        var tasksCompleted: HashMap<String, Int> = HashMap()
+        var tasksTotal: HashMap<String, Int> = HashMap()
     }
 }
