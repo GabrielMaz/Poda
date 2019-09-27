@@ -21,7 +21,7 @@ class CategoryGridAdapter(private var categoryList: List<Category>, private var 
 
         Glide
             .with(context)
-            .load(item.photo)
+            .load("${RetrofitController.baseUrl}/${item.photo}")
             .centerCrop()
             .placeholder(R.drawable.ic_placeholder)
             .into(view.item_category_photo)
