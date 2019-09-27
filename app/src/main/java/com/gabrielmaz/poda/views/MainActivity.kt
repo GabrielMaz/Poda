@@ -5,12 +5,14 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.gabrielmaz.poda.R
+import com.gabrielmaz.poda.controllers.CategoryController
 import com.gabrielmaz.poda.controllers.TodoController
 import com.gabrielmaz.poda.controllers.UserController
 import com.gabrielmaz.poda.helpers.gone
 import com.gabrielmaz.poda.models.Category
 import com.gabrielmaz.poda.models.Todo
 import com.gabrielmaz.poda.models.User
+import com.gabrielmaz.poda.views.categories.CategoriesFragment
 import com.gabrielmaz.poda.views.home.HomeFragment
 import com.gabrielmaz.poda.views.profile.ProfileFragment
 import com.gabrielmaz.poda.views.todos.TodosFragment
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope,
 
     private val userController = UserController()
     private val todoController = TodoController()
+    private val categoryController = CategoryController()
 
     override fun onFragmentInteraction() {
 
@@ -75,7 +78,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope,
             when (menuItem.itemId) {
                 R.id.home -> showFragment(HomeFragment(), HomeFragmentTag)
                 R.id.tasks -> showFragment(TodosFragment(), TodosFragmentTag)
-                R.id.categories -> showFragment(ProfileFragment(), CategoriesFragmentTag)
+                R.id.categories -> showFragment(CategoriesFragment(), CategoriesFragmentTag)
                 R.id.profile -> showFragment(ProfileFragment(), ProfileFragmentTag)
             }
 
@@ -88,6 +91,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope,
             try {
                 user = userController.getUser()
                 todos = todoController.getTodos()
+                categories = categoryController.getCategories()
                 getTasksCompleted()
 
                 withContext(Dispatchers.Main) {

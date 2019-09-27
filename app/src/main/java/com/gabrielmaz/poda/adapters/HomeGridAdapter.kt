@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.models.HomeItem
-import kotlinx.android.synthetic.main.fragment_profile.view.*
 import kotlinx.android.synthetic.main.item_home.view.*
 
-class HomeAdapter(private var homeList: List<HomeItem>, private var context: Context) : BaseAdapter() {
+class HomeGridAdapter(private var homeList: List<HomeItem>, private var context: Context) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val item = this.homeList[position]
@@ -18,9 +17,9 @@ class HomeAdapter(private var homeList: List<HomeItem>, private var context: Con
         var inflator = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         var view = inflator.inflate(R.layout.item_home, null)
 
-        view.progress_bar.progress = item.progress
-        view.progress_number.text = "${item.progress}%"
-        view.category_name.text = item.name
+        view.item_home_progress_bar.progress = item.progress
+        view.item_home_progress_number.text = "${item.progress}%"
+        view.item_home_category_name.text = item.name
 
         return view
     }

@@ -7,16 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.gabrielmaz.poda.R
-import com.gabrielmaz.poda.adapters.HomeAdapter
+import com.gabrielmaz.poda.adapters.HomeGridAdapter
 import com.gabrielmaz.poda.models.HomeItem
 import com.gabrielmaz.poda.views.MainActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.ZonedDateTime
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 
@@ -53,7 +49,7 @@ class HomeFragment : Fragment(), CoroutineScope {
             .into(image)
 
         generateList()
-        home_grid.adapter = activity?.let { HomeAdapter(list, it) }
+        home_grid.adapter = activity?.let { HomeGridAdapter(list, it) }
     }
 
     private fun generateList() {

@@ -90,7 +90,7 @@ class ProfileFragment : Fragment(), CoroutineScope {
                 "${user.createdAt.month} ".toLowerCase().capitalize() +
                 "${user.createdAt.year}"
 
-        categories.text = user.createdAt.dayOfMonth.toString()
+        categories.text = MainActivity.tasksTotal.size.toString()
         total_tasks.text = getCount(MainActivity.tasksTotal).toString()
         tasks_completed.text = getCount(MainActivity.tasksCompleted).toString()
         most_used_category.text = MainActivity.tasksTotal.maxBy { it.value }?.key.toString()
