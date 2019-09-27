@@ -27,7 +27,6 @@ class TodosFragment : Fragment(), CoroutineScope{
         get() = Dispatchers.Main
     val todoController = TodoController()
 
-//    lateinit var todos: List<Todo>
     var todos = MainActivity.todos
 
     override fun onCreateView(

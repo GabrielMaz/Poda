@@ -9,7 +9,7 @@ import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.models.HomeItem
 import kotlinx.android.synthetic.main.item_home.view.*
 
-class HomeGridAdapter(private var homeList: List<HomeItem>, private var context: Context) : BaseAdapter() {
+class HomeGridAdapter(private var homeList: ArrayList<HomeItem>, private var context: Context) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val item = this.homeList[position]

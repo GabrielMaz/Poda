@@ -9,5 +9,5 @@ interface TodoService {
     suspend fun getTodos(
         @Header("Authorization") authorization: String?,
         @Header("Content-Type") contentType: String
-    ): List<Todo>
+    ): ArrayList<Todo>
 }

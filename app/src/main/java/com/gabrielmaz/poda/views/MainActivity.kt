@@ -131,8 +131,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope,
         private const val ProfileFragmentTag = "ProfileFragment"
 
         lateinit var user: User
-        lateinit var todos: List<Todo>
-        lateinit var categories: List<Category>
+        lateinit var todos: ArrayList<Todo>
+        lateinit var categories: ArrayList<Category>
         var tasksCompleted: HashMap<String, Int> = HashMap()
         var tasksTotal: HashMap<String, Int> = HashMap()
     }

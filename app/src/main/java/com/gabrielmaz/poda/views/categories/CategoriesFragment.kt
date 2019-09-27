@@ -23,6 +23,8 @@ class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        categories_grid.adapter = activity?.let { CategoryGridAdapter(MainActivity.categories, it) }
+
+
+        categories_grid.adapter = activity?.let { CategoryGridAdapter(MainActivity.categories, it, MainActivity.todos) }
     }
 }

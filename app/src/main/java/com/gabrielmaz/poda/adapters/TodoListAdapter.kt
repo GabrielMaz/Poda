@@ -14,11 +14,11 @@ import com.gabrielmaz.poda.models.Todo
 import kotlinx.android.synthetic.main.item_todolist.view.*
 
 class TodoListAdapter(
-    private var data: List<Todo>,
+    private var data: ArrayList<Todo>,
     private val context: Context
 ) : RecyclerView.Adapter<TodoListAdapter.TodoListViewHolder>() {
 
-    var tasks: List<Todo>
+    var tasks: ArrayList<Todo>
         get() = data
         set(value) {
             data = value
