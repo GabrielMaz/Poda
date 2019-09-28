@@ -27,7 +27,7 @@ class CategoryGridAdapter(
         val view = inflator.inflate(R.layout.item_category, null)
 
         view.item_category_text.text = item.name
-        
+
         Glide
             .with(context)
             .load("${RetrofitController.baseUrl}/${item.photo}")
@@ -41,6 +41,7 @@ class CategoryGridAdapter(
 
             val intent = Intent(context, CategoryActivity::class.java)
             intent.putParcelableArrayListExtra(CategoryActivity.todosTag, list)
+            intent.putExtra(CategoryActivity.categoryTag, item)
             context.startActivity(intent)
 
         }

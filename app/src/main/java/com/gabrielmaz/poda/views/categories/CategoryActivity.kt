@@ -3,6 +3,7 @@ package com.gabrielmaz.poda.views.categories
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.gabrielmaz.poda.R
+import com.gabrielmaz.poda.models.Category
 import com.gabrielmaz.poda.models.Todo
 
 class CategoryActivity : AppCompatActivity() {
@@ -11,11 +12,18 @@ class CategoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
+        val category = intent.getParcelableExtra<Category>(categoryTag)
+
+        title = category.name
+
         supportFragmentManager
             .beginTransaction()
             .add(
                 R.id.container,
-                CategoryFragment.newInstance(intent.getParcelableArrayListExtra<Todo>(todosTag)),
+                CategoryFragment.newInstance(
+                    intent.getParcelableArrayListExtra<Todo>(todosTag),
+                    category
+                ),
                 null
             )
             .commit()
@@ -25,5 +33,6 @@ class CategoryActivity : AppCompatActivity() {
     companion object {
 
         const val todosTag = "todosTag"
+        const val categoryTag = "categoryTag"
     }
 }

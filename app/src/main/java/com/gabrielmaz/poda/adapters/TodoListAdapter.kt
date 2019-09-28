@@ -40,7 +40,6 @@ class TodoListAdapter(
         holder.description.text = row.description
         holder.priority.text = row.priority
 
-//        holder.category.setBackgroundColor(ContextCompat.getColor(context, row.category.color))
         holder.category.setBackgroundColor(Color.parseColor(row.category.color))
 
         if (holder.check.isChecked) {
