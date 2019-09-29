@@ -2,31 +2,23 @@ package com.gabrielmaz.poda.views.profile
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.controllers.AuthController
-import com.gabrielmaz.poda.controllers.UserController
-import com.gabrielmaz.poda.helpers.hideKeyboard
 import com.gabrielmaz.poda.helpers.visible
-import com.gabrielmaz.poda.models.User
 import com.gabrielmaz.poda.views.MainActivity
 import com.gabrielmaz.poda.views.login.LoginActivity
 import com.github.ybq.android.spinkit.style.FadingCircle
-import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 class ProfileFragment : Fragment(), CoroutineScope {
@@ -61,6 +53,10 @@ class ProfileFragment : Fragment(), CoroutineScope {
                 profile_loading.visible()
                 logout()
             }
+
+            profile_image_add.setOnClickListener {
+                listener?.onFragmentInteraction(MainActivity.ProfileFragmentTag)
+            }
         }
     }
 
@@ -79,7 +75,7 @@ class ProfileFragment : Fragment(), CoroutineScope {
     }
 
     interface OnFragmentInteractionListener {
-        fun onFragmentInteraction()
+        fun onFragmentInteraction(tag: String)
     }
 
     private fun setUserData() {
@@ -90,7 +86,7 @@ class ProfileFragment : Fragment(), CoroutineScope {
                 "${user.createdAt.month} ".toLowerCase().capitalize() +
                 "${user.createdAt.year}"
 
-        categories.text = MainActivity.tasksTotal.size.toString()
+        categories_used.text = MainActivity.tasksTotal.size.toString()
         total_tasks.text = getCount(MainActivity.tasksTotal).toString()
         tasks_completed.text = getCount(MainActivity.tasksCompleted).toString()
         most_used_category.text = MainActivity.tasksTotal.maxBy { it.value }?.key.toString()
@@ -100,7 +96,7 @@ class ProfileFragment : Fragment(), CoroutineScope {
             .load(user.avatar)
             .centerCrop()
             .placeholder(R.drawable.ic_placeholder)
-            .into(image)
+            .into(profile_image)
     }
 
     private fun logout() {
@@ -123,6 +119,20 @@ class ProfileFragment : Fragment(), CoroutineScope {
         var acc = 0
         map.forEach { task -> acc += task.value }
         return acc
+    }
+
+
+    fun updateProfileFragment(data: Intent?) {
+        profile_image.setImageURI(data?.data)
+
+        Glide
+            .with(this@ProfileFragment)
+            .load(data?.data)
+            .centerCrop()
+            .placeholder(R.drawable.ic_placeholder)
+            .into(profile_image)
+
+
     }
 
     companion object {

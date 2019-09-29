@@ -56,13 +56,8 @@ class HomeFragment : Fragment(), CoroutineScope {
 
         MainActivity.tasksTotal.forEach { task ->
             val progress =
-                if (MainActivity.tasksCompleted[task.key] != null) MainActivity.tasksCompleted[task.key]!! / task.value else 0
+                if (MainActivity.tasksCompleted[task.key] != null) MainActivity.tasksCompleted[task.key]!! * 100 / task.value!! else 0
             list.add(HomeItem(task.key, progress))
         }
-
-//        list.add(HomeItem("Home", 10))
-//        list.add(HomeItem("Work", 30))
-//        list.add(HomeItem("Study", 70))
-//        list.add(HomeItem("Ucu", 100))
     }
 }

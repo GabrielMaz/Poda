@@ -8,5 +8,5 @@ data class User(
     val email: String,
     val createdAt: ZonedDateTime,
     val updatedAt: ZonedDateTime,
-    val avatar: String
+    var avatar: String
 )
