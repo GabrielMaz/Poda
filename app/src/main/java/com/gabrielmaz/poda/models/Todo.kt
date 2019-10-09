@@ -9,7 +9,7 @@ data class Todo(
     val id: Int,
     val description: String,
     var completed: Boolean,
-    val dueDate: ZonedDateTime,
+    var dueDate: ZonedDateTime,
     val priority: String,
     val createdAt: ZonedDateTime,
     val updatedAt: ZonedDateTime,

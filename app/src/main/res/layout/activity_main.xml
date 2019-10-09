@@ -20,7 +20,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/menu_home" />
+        android:clickable="false"
+        android:contextClickable="false"
+        app:menu="@menu/menu_home"
+        />
 
     <FrameLayout
         android:id="@+id/container"

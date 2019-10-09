@@ -4,10 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    tools:context=".views.profile.ProfileFragment">
+    android:orientation="vertical"
+    tools:context=".views.profile.ProfileFragment"
+    android:gravity="center">
 
     <ScrollView
+        android:id="@+id/profile_view"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -201,7 +204,7 @@
                 android:text="@string/logout" />
 
             <com.github.ybq.android.spinkit.SpinKitView
-                android:id="@+id/profile_loading"
+                android:id="@+id/profile_loading_logout"
                 style="@style/SpinKitView.WanderingCubes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -213,5 +216,13 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/profile_loading"
+        style="@style/SpinKitView.Large.WanderingCubes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/blue" />
 
 </LinearLayout>

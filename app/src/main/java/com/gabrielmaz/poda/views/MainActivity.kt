@@ -15,17 +15,17 @@ import com.gabrielmaz.poda.controllers.CategoryController
 import com.gabrielmaz.poda.controllers.TodoController
 import com.gabrielmaz.poda.controllers.UserController
 import com.gabrielmaz.poda.helpers.gone
+import com.gabrielmaz.poda.helpers.invisible
+import com.gabrielmaz.poda.helpers.visible
 import com.gabrielmaz.poda.models.Category
 import com.gabrielmaz.poda.models.Todo
 import com.gabrielmaz.poda.models.User
-import com.gabrielmaz.poda.views.MainActivity.Companion.categories
 import com.gabrielmaz.poda.views.categories.CategoriesFragment
 import com.gabrielmaz.poda.views.home.HomeFragment
 import com.gabrielmaz.poda.views.profile.ProfileFragment
 import com.gabrielmaz.poda.views.todos.TodosFragment
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,18 +38,24 @@ class MainActivity : AppCompatActivity(), CoroutineScope,
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 
-    private val userController = UserController()
-    private val todoController = TodoController()
-    private val categoryController = CategoryController()
+    lateinit var todos: ArrayList<Todo>
+    lateinit var categories: ArrayList<Category>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
 
+        bottomNavigation.isClickable = false
+
         main_loading.setIndeterminateDrawable(FadingCircle())
 
-        load()
+        if (savedInstanceState == null) {
+            load(HomeFragmentTag)
+        } else {
+            setBottomNavigationBar()
+            main_loading.gone()
+        }
     }
 
     private fun removeActiveFragment() {
@@ -91,109 +97,81 @@ class MainActivity : AppCompatActivity(), CoroutineScope,
         }
     }
 
-    private fun load() {
-        launch(Dispatchers.IO) {
-            try {
-                user = userController.getUser()
-                todos = todoController.getTodos()
-                categories = categoryController.getCategories()
-                getTasksCompleted()
+    private fun load(fragment: String) {
+        main_loading.invisible()
 
-                withContext(Dispatchers.Main) {
-                    setBottomNavigationBar()
-                    main_loading.gone()
-                    showFragment(HomeFragment(), HomeFragmentTag)
+        setBottomNavigationBar()
+        when (fragment) {
+            HomeFragmentTag -> showFragment(HomeFragment(), HomeFragmentTag)
+            TodosFragmentTag -> showFragment(TodosFragment(), TodosFragmentTag)
+            CategoriesFragmentTag -> showFragment(
+                CategoriesFragment(),
+                CategoriesFragmentTag
+            )
+            ProfileFragmentTag -> supportFragmentManager.findFragmentByTag(
+                ProfileFragmentTag
+            ).also {
+                it?.let { fragment ->
+                    if (fragment is ProfileFragment) {
+                        fragment.setUserData()
+                    }
                 }
-
-
-            } catch (exception: Exception) {
-                Log.i("asd", "asd")
             }
+            else -> showFragment(HomeFragment(), HomeFragmentTag)
         }
     }
 
-    private fun getTasksCompleted() {
-        todos.forEach { todo ->
-
-            tasksTotal[todo.category.name] = tasksTotal[todo.category.name]?.plus(1) ?: 1
-
-
-//            if (tasksTotal[todo.category.name] == null) {
-//                tasksTotal[todo.category.name] = 1
-//            } else {
-//                val x = tasksTotal[todo.category.name]?.plus(1)
-//                tasksTotal[todo.category.name] = x
-////                tasksTotal[todo.category.name] = tasksTotal[todo.category.name]?.plus(1)
-//            }
-            if (todo.completed) {
-
-                tasksCompleted[todo.category.name] = tasksCompleted[todo.category.name]?.plus(1) ?: 1
-
-//                if(tasksCompleted[todo.category.name] == null) {
-//                    tasksCompleted[todo.category.name] = 1
-//                } else {
-//                    tasksCompleted[todo.category.name]?.plus(1)
-////                    tasksCompleted[todo.category.name] = tasksCompleted[todo.category.name]?.plus(1)
-//                }
-            }
-        }
-    }
-
-    override fun onFragmentInteraction(tag: String) {
-        //check runtime permission
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                PackageManager.PERMISSION_DENIED){
-                //permission denied
-                val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE);
-                //show popup to request runtime permission
-                requestPermissions(permissions, PERMISSION_CODE);
-            }
-            else{
-                //permission already granted
+    override fun onFragmentInteraction(tag: String, action: String) {
+        if (action == ProfileFragment.LOAD_IMAGE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_DENIED
+                ) {
+                    val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE);
+                    requestPermissions(permissions, PERMISSION_CODE);
+                } else {
+                    pickImageFromGallery();
+                }
+            } else {
                 pickImageFromGallery();
             }
-        }
-        else{
-            //system OS is < Marshmallow
-            pickImageFromGallery();
+        } else if (action == ProfileFragment.LOAD_DATA) {
+            load(ProfileFragmentTag)
         }
     }
 
     private fun pickImageFromGallery() {
-        //Intent to pick image
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         startActivityForResult(intent, IMAGE_PICK_CODE)
     }
 
-    //handle requested permission result
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when(requestCode){
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
             PERMISSION_CODE -> {
-                if (grantResults.size >0 && grantResults[0] ==
-                    PackageManager.PERMISSION_GRANTED){
-                    //permission from popup granted
+                if (grantResults.isNotEmpty() && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED
+                ) {
                     pickImageFromGallery()
-                }
-                else{
-                    //permission from popup denied
+                } else {
                     Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    //handle result of picked image
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
 
             supportFragmentManager.findFragmentByTag(ProfileFragmentTag).also {
                 it.let { fragment ->
                     if (fragment is ProfileFragment) {
                         fragment.updateProfileFragment(data)
-                        user.avatar = data?.data.toString()
                     }
                 }
             }
@@ -201,19 +179,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope,
     }
 
     companion object {
-        //image pick code
-        private val IMAGE_PICK_CODE = 1000;
-        //Permission code
-        private val PERMISSION_CODE = 1001;
+        private const val IMAGE_PICK_CODE = 1000
+        private const val PERMISSION_CODE = 1001
+
         const val HomeFragmentTag = "HomeFragment"
         const val TodosFragmentTag = "TodosFragment"
         const val CategoriesFragmentTag = "CategoriesFragment"
         const val ProfileFragmentTag = "ProfileFragment"
 
-        lateinit var user: User
-        lateinit var todos: ArrayList<Todo>
-        lateinit var categories: ArrayList<Category>
-        var tasksCompleted: HashMap<String, Int> = HashMap()
-        var tasksTotal: HashMap<String, Int> = HashMap()
     }
 }

@@ -1,8 +1,9 @@
 package com.gabrielmaz.poda.services
 
 import com.gabrielmaz.poda.models.Todo
-import retrofit2.http.GET
-import retrofit2.http.Header
+import com.gabrielmaz.poda.services.request.TodoRequest
+import com.gabrielmaz.poda.services.response.SuccessReponse
+import retrofit2.http.*
 
 interface TodoService {
     @GET("todos")
@@ -10,4 +11,12 @@ interface TodoService {
         @Header("Authorization") authorization: String?,
         @Header("Content-Type") contentType: String
     ): ArrayList<Todo>
+
+    @PUT("todos/{userId}")
+    suspend fun updateTodo(
+        @Header("Authorization") authorization: String?,
+        @Header("Content-Type") contentType: String,
+        @Path("userId") userId: Int,
+        @Body todoRequest: TodoRequest
+    ) :SuccessReponse
 }

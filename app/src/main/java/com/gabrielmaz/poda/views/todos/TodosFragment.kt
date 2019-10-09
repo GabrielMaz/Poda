@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.controllers.TodoController
+import com.gabrielmaz.poda.controllers.UserController
 import com.gabrielmaz.poda.helpers.gone
 import com.gabrielmaz.poda.helpers.visible
 import com.gabrielmaz.poda.models.Todo
-import com.gabrielmaz.poda.views.MainActivity
+import com.gabrielmaz.poda.models.TodoListItem
 import com.gabrielmaz.todolist.adapters.TodoListAdapter
+import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_todos.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,12 +24,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
-class TodosFragment : Fragment(), CoroutineScope{
+class TodosFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
-    val todoController = TodoController()
 
-    var todos = MainActivity.todos
+    private val userController = UserController()
+    private val todoController = TodoController()
+
+    private lateinit var todos: ArrayList<Todo>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,20 +44,18 @@ class TodosFragment : Fragment(), CoroutineScope{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setList()
+        todo_loading.setIndeterminateDrawable(FadingCircle())
 
-        listVisibility()
-
-//        load()
+        load()
     }
 
     private fun listVisibility() {
         if (todos.isEmpty()) {
-            todolist_list.gone()
-            todolist_emptyview2.visible()
+            todo_list.gone()
+            todo_emptyview.visible()
         } else {
-            todolist_list.visible()
-            todolist_emptyview2.gone()
+            todo_list.visible()
+            todo_emptyview.gone()
         }
     }
 
@@ -63,9 +65,9 @@ class TodosFragment : Fragment(), CoroutineScope{
                 todos = todoController.getTodos()
 
                 withContext(Dispatchers.Main) {
+                    todo_loading.gone()
                     setList()
                 }
-
 
             } catch (exception: Exception) {
                 Log.i("asd", "asd")
@@ -73,17 +75,32 @@ class TodosFragment : Fragment(), CoroutineScope{
         }
     }
 
-    fun setList() {
-        val adapter = context?.let { TodoListAdapter(todos, it) }
+    private fun setList() {
 
-        todolist_list.layoutManager = LinearLayoutManager(activity)
-        todolist_list.addItemDecoration(
+        val adapter = context?.let {
+            TodoListAdapter(todoController.getTodoWithHeaders(todos)) { todo ->
+                launch(Dispatchers.IO) {
+                    try {
+
+                        val user = userController.getUser()
+                        todoController.setTodo(todo, user.id)
+
+                        load()
+                    } catch (ex: java.lang.Exception) {
+
+                    }
+                }
+            }
+        }
+
+        todo_list.layoutManager = LinearLayoutManager(activity)
+        todo_list.addItemDecoration(
             DividerItemDecoration(
                 activity,
                 DividerItemDecoration.VERTICAL
             )
         )
-        todolist_list.adapter = adapter
+        todo_list.adapter = adapter
 
         listVisibility()
     }

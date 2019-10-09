@@ -14,6 +14,7 @@ import com.gabrielmaz.poda.helpers.gone
 import com.gabrielmaz.poda.helpers.visible
 import com.gabrielmaz.poda.models.Category
 import com.gabrielmaz.poda.models.Todo
+import com.gabrielmaz.poda.models.TodoListItem
 import com.gabrielmaz.todolist.adapters.TodoListAdapter
 import kotlinx.android.synthetic.main.fragment_category.*
 
@@ -48,12 +49,14 @@ class CategoryFragment : Fragment() {
             .placeholder(R.drawable.ic_placeholder)
             .into(category_image)
 
-
         setList()
     }
 
-    fun setList() {
-        val adapter = context?.let { TodoListAdapter(todos, it) }
+    private fun setList() {
+
+        val adapter = context?.let {
+            TodoListAdapter(ArrayList(todos.map { todo -> TodoListItem(todo, null) })) {}
+        }
 
         category_list.layoutManager = LinearLayoutManager(activity)
         category_list.addItemDecoration(
@@ -79,9 +82,7 @@ class CategoryFragment : Fragment() {
 
     companion object {
 
-        const val todosParams = "todosParams"
         const val todosTag = "todosTag"
-        const val categoryParams = "categoryParams"
         const val categoryTag = "categoryTag"
 
         @JvmStatic

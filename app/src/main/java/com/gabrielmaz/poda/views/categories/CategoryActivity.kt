@@ -12,21 +12,24 @@ class CategoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_category)
 
-        val category = intent.getParcelableExtra<Category>(categoryTag)
+        if (savedInstanceState == null) {
 
-        title = category.name
+            val category = intent.getParcelableExtra<Category>(categoryTag)
 
-        supportFragmentManager
-            .beginTransaction()
-            .add(
-                R.id.container,
-                CategoryFragment.newInstance(
-                    intent.getParcelableArrayListExtra<Todo>(todosTag),
-                    category
-                ),
-                null
-            )
-            .commit()
+            title = category.name
+
+            supportFragmentManager
+                .beginTransaction()
+                .add(
+                    R.id.container,
+                    CategoryFragment.newInstance(
+                        intent.getParcelableArrayListExtra<Todo>(todosTag),
+                        category
+                    ),
+                    null
+                )
+                .commit()
+        }
 
     }
 

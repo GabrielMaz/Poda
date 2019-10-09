@@ -11,60 +11,99 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.models.Todo
+import com.gabrielmaz.poda.models.TodoListItem
 import kotlinx.android.synthetic.main.item_todolist.view.*
+import kotlinx.android.synthetic.main.item_todolist_header.view.*
 
 class TodoListAdapter(
-    private var data: ArrayList<Todo>,
-    private val context: Context
-) : RecyclerView.Adapter<TodoListAdapter.TodoListViewHolder>() {
+    private var data: ArrayList<TodoListItem>,
+    private var onCompleted: (Todo) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var tasks: ArrayList<Todo>
+    var tasks: ArrayList<TodoListItem>
         get() = data
         set(value) {
             data = value
             notifyDataSetChanged()
         }
+    private val HEADER_TYPE = 0
+    private val TODO_TYPE = 1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_todolist, parent, false)
-        return TodoListViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == HEADER_TYPE) {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_todolist_header, parent, false)
+            TodoListViewHolderHeader(view)
+        } else {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_todolist, parent, false)
+            TodoListViewHolder(view)
+        }
+    }
+
+    /**
+     *
+     */
+    override fun getItemViewType(position: Int): Int {
+        return if (data[position].header != null) HEADER_TYPE else TODO_TYPE
     }
 
     override fun getItemCount(): Int = tasks.size
 
-    override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val row = tasks[position]
 
-        holder.check.isChecked = row.completed
-        holder.description.text = row.description
-        holder.priority.text = row.priority
+        if (holder is TodoListViewHolder) {
+            val todo = row.todo!!
 
-        holder.category.setBackgroundColor(Color.parseColor(row.category.color))
+            holder.check.isChecked = todo.completed
+            holder.description.text = todo.id.toString()
+            holder.priority.text = todo.priority
 
-        if (holder.check.isChecked) {
-            holder.description.paintFlags =
-                holder.description.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            holder.priority.paintFlags = holder.priority.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-        }
+            holder.category.setBackgroundColor(Color.parseColor(todo.category.color))
 
-        holder.check.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                row.completed = true
+            if (holder.check.isChecked) {
                 holder.description.paintFlags =
                     holder.description.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 holder.priority.paintFlags =
                     holder.priority.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            } else {
-                row.completed = false
-                holder.description.paintFlags =
-                    holder.description.paintFlags xor Paint.STRIKE_THRU_TEXT_FLAG
-                holder.priority.paintFlags =
-                    holder.priority.paintFlags xor Paint.STRIKE_THRU_TEXT_FLAG
             }
+
+            holder.check.setOnCheckedChangeListener { _, isChecked ->
+
+                todo.completed = isChecked
+
+                onCompleted(todo)
+
+//                if (isChecked) {
+//                    row.completed = true
+//                    holder.description.paintFlags =
+//                        holder.description.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+//                    holder.priority.paintFlags =
+//                        holder.priority.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+//                } else {
+//                    row.completed = false
+//                    holder.description.paintFlags =
+//                        holder.description.paintFlags xor Paint.STRIKE_THRU_TEXT_FLAG
+//                    holder.priority.paintFlags =
+//                        holder.priority.paintFlags xor Paint.STRIKE_THRU_TEXT_FLAG
+//                }
+            }
+        } else if (holder is TodoListViewHolderHeader) {
+            val header = row.header!!
+            holder.day.text = header.dayOfWeek.toString()
+
+            holder.date.text = "${header.dayOfMonth}" +
+                    " ${header.month}" +
+                    ", ${header.year}"
+
         }
     }
 
+    inner class TodoListViewHolderHeader(mView: View) : RecyclerView.ViewHolder(mView) {
+        val day: TextView = mView.item_todo_header_day
+        val date: TextView = mView.item_todo_header_date
+    }
 
     inner class TodoListViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val check: CheckBox = mView.item_check
