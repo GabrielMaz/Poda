@@ -7,7 +7,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,7 +15,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_list_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".App">
+        <activity
+            android:name=".views.createTodo.CreateTodoActivity"
+            android:label="@string/title_activity_create_todo"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".views.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -12,6 +12,12 @@ interface TodoService {
         @Header("Content-Type") contentType: String
     ): ArrayList<Todo>
 
+    @POST("todos")
+    suspend fun createTodo(
+        @Header("Content-Type") contentType: String,
+        @Body todoRequest: TodoRequest
+    ): SuccessReponse
+
     @PUT("todos/{id}")
     suspend fun updateTodo(
         @Header("Authorization") authorization: String?,

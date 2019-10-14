@@ -57,7 +57,7 @@ class TodoListAdapter(
             val todo = row.todo!!
 
             holder.check.isChecked = todo.completed
-            holder.description.text = todo.id.toString()
+            holder.description.text = todo.description
             holder.priority.text = todo.priority
 
             holder.category.setBackgroundColor(Color.parseColor(todo.category.color))
