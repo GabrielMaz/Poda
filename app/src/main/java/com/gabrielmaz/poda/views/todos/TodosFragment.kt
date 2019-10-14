@@ -1,5 +1,6 @@
 package com.gabrielmaz.poda.views.todos
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,11 +11,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.controllers.TodoController
-import com.gabrielmaz.poda.controllers.UserController
 import com.gabrielmaz.poda.helpers.gone
 import com.gabrielmaz.poda.helpers.visible
 import com.gabrielmaz.poda.models.Todo
-import com.gabrielmaz.poda.models.TodoListItem
+import com.gabrielmaz.poda.views.createTodo.CreateTodoActivity
 import com.gabrielmaz.todolist.adapters.TodoListAdapter
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_todos.*
@@ -36,7 +36,6 @@ class TodosFragment : Fragment(), CoroutineScope {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_todos, container, false)
     }
 
@@ -44,6 +43,13 @@ class TodosFragment : Fragment(), CoroutineScope {
         super.onViewCreated(view, savedInstanceState)
 
         todo_loading.setIndeterminateDrawable(FadingCircle())
+
+        create_todo_button.setOnClickListener {
+            context?.let {
+                val intent = Intent(it, CreateTodoActivity::class.java)
+                it.startActivity(intent)
+            }
+        }
 
         load()
     }
@@ -81,7 +87,7 @@ class TodosFragment : Fragment(), CoroutineScope {
                 launch(Dispatchers.IO) {
                     try {
 
-                        todoController.setTodo(todo, todo.id)
+                        todoController.updateTodo(todo, todo.id)
 
                         load()
                     } catch (ex: java.lang.Exception) {

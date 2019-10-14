@@ -1,5 +1,6 @@
 package com.gabrielmaz.poda.views.categories
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.gabrielmaz.poda.helpers.visible
 import com.gabrielmaz.poda.models.Category
 import com.gabrielmaz.poda.models.Todo
 import com.gabrielmaz.poda.models.TodoListItem
+import com.gabrielmaz.poda.views.createTodo.CreateTodoActivity
 import com.gabrielmaz.todolist.adapters.TodoListAdapter
 import kotlinx.android.synthetic.main.fragment_category.*
 
@@ -50,6 +52,16 @@ class CategoryFragment : Fragment() {
             .into(category_image)
 
         setList()
+
+        category_button.setOnClickListener {
+            context?.let {
+                val intent = Intent(it, CreateTodoActivity::class.java)
+                if (category != null) {
+                    intent.putExtra("category", category)
+                }
+                it.startActivity(intent)
+            }
+        }
     }
 
     private fun setList() {

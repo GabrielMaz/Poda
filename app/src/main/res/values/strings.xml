@@ -26,4 +26,9 @@
     <string name="profile_tasks_completed">Tasks completed</string>
     <string name="profile_most_used_category">Most used category</string>
 
+    // CreateTodo
+    <string name="title_activity_create_todo">CreateTodoActivity</string>
+    <string name="create_todo">Create</string>
+    <string name="description">Description</string>
+
 </resources>

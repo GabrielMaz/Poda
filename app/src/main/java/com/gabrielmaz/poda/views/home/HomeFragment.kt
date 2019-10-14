@@ -34,7 +34,7 @@ import kotlinx.coroutines.withContext
 import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 
-class HomeFragment() : Fragment(), CoroutineScope {
+class HomeFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 

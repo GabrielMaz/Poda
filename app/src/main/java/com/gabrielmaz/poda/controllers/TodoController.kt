@@ -12,7 +12,21 @@ class TodoController {
     suspend fun getTodos() =
         todoService.getTodos(RetrofitController.accessToken, "application/json")
 
-    suspend fun setTodo(todo: Todo, id: Int) {
+    suspend fun createTodo(description: String, categoryId: Int, priority: String, dueDate: ZonedDateTime) {
+        val todoRequest = TodoRequest(
+            priority,
+            description,
+            dueDate,
+            false,
+            categoryId
+        )
+        todoService.createTodo(
+            "application/json",
+            todoRequest
+        )
+    }
+
+    suspend fun updateTodo(todo: Todo, id: Int) {
 
         val todoRequest = TodoRequest(
             todo.priority,
@@ -28,6 +42,7 @@ class TodoController {
             todoRequest
         )
     }
+
 
     fun getTotalTasks(todos: List<Todo>): HashMap<String, Int> {
         var tasks = HashMap<String, Int>()
