@@ -12,7 +12,7 @@ class TodoController {
     suspend fun getTodos() =
         todoService.getTodos(RetrofitController.accessToken, "application/json")
 
-    suspend fun setTodo(todo: Todo, userId: Int) {
+    suspend fun setTodo(todo: Todo, id: Int) {
 
         val todoRequest = TodoRequest(
             todo.priority,
@@ -24,7 +24,7 @@ class TodoController {
         todoService.updateTodo(
             RetrofitController.accessToken,
             "application/json",
-            userId,
+            id,
             todoRequest
         )
     }

@@ -28,7 +28,6 @@ class TodosFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main
 
-    private val userController = UserController()
     private val todoController = TodoController()
 
     private lateinit var todos: ArrayList<Todo>
@@ -82,12 +81,11 @@ class TodosFragment : Fragment(), CoroutineScope {
                 launch(Dispatchers.IO) {
                     try {
 
-                        val user = userController.getUser()
-                        todoController.setTodo(todo, user.id)
+                        todoController.setTodo(todo, todo.id)
 
                         load()
                     } catch (ex: java.lang.Exception) {
-
+                        Log.i("asd", "asd")
                     }
                 }
             }

@@ -12,11 +12,11 @@ interface TodoService {
         @Header("Content-Type") contentType: String
     ): ArrayList<Todo>
 
-    @PUT("todos/{userId}")
+    @PUT("todos/{id}")
     suspend fun updateTodo(
         @Header("Authorization") authorization: String?,
         @Header("Content-Type") contentType: String,
-        @Path("userId") userId: Int,
+        @Path("id") id: Int,
         @Body todoRequest: TodoRequest
-    ) :SuccessReponse
+    ): SuccessReponse
 }

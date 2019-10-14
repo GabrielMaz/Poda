@@ -74,20 +74,6 @@ class TodoListAdapter(
                 todo.completed = isChecked
 
                 onCompleted(todo)
-
-//                if (isChecked) {
-//                    row.completed = true
-//                    holder.description.paintFlags =
-//                        holder.description.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-//                    holder.priority.paintFlags =
-//                        holder.priority.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-//                } else {
-//                    row.completed = false
-//                    holder.description.paintFlags =
-//                        holder.description.paintFlags xor Paint.STRIKE_THRU_TEXT_FLAG
-//                    holder.priority.paintFlags =
-//                        holder.priority.paintFlags xor Paint.STRIKE_THRU_TEXT_FLAG
-//                }
             }
         } else if (holder is TodoListViewHolderHeader) {
             val header = row.header!!
