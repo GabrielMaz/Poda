@@ -1,4 +1,4 @@
-package com.gabrielmaz.poda.views.createTodo
+package com.gabrielmaz.poda.views.todos.create
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +23,7 @@ class CreateTodoActivity : AppCompatActivity(), CoroutineScope, CreateTodoFragme
 
         if (savedInstanceState == null) {
             val category = intent.getParcelableExtra<Category>("category")
+            title = "Create a ${category?.name?: "new"} todo"
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.container, CreateTodoFragment.newInstance(category), null)

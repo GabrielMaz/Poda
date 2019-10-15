@@ -1,4 +1,4 @@
-package com.gabrielmaz.poda.views.createTodo
+package com.gabrielmaz.poda.views.todos.create
 
 import android.content.Context
 import android.os.Bundle

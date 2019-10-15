@@ -16,7 +16,7 @@ import com.gabrielmaz.poda.helpers.visible
 import com.gabrielmaz.poda.models.Category
 import com.gabrielmaz.poda.models.Todo
 import com.gabrielmaz.poda.models.TodoListItem
-import com.gabrielmaz.poda.views.createTodo.CreateTodoActivity
+import com.gabrielmaz.poda.views.todos.create.CreateTodoActivity
 import com.gabrielmaz.todolist.adapters.TodoListAdapter
 import kotlinx.android.synthetic.main.fragment_category.*
 

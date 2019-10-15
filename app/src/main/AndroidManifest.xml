@@ -17,10 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".App">
-        <activity
-            android:name=".views.createTodo.CreateTodoActivity"
-            android:label="@string/title_activity_create_todo"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".views.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,6 +28,7 @@
         <activity android:name=".views.signup.SignupActivity" />
         <activity android:name=".views.MainActivity" />
         <activity android:name=".views.categories.CategoryActivity" />
+        <activity android:name=".views.todos.create.CreateTodoActivity"/>
     </application>
 
 </manifest>
