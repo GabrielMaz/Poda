@@ -66,9 +66,8 @@ class TodoListAdapter(
                     holder.priority.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             }
 
-            holder.check.setOnCheckedChangeListener { _, isChecked ->
-
-                todo.completed = isChecked
+            holder.check.setOnClickListener {
+                todo.completed = holder.check.isChecked
 
                 onCompleted(todo)
             }

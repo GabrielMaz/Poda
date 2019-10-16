@@ -31,6 +31,7 @@ class TodosFragment : Fragment(), CoroutineScope {
     private val todoController = TodoController()
 
     private lateinit var todos: ArrayList<Todo>
+    lateinit var adapter: TodoListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -82,20 +83,23 @@ class TodosFragment : Fragment(), CoroutineScope {
 
     private fun setList() {
 
-        val adapter = context?.let {
+        adapter = context?.let {
             TodoListAdapter(todoController.getTodoWithHeaders(todos)) { todo ->
                 launch(Dispatchers.IO) {
                     try {
 
                         todoController.updateTodo(todo, todo.id)
 
-                        load()
+                        withContext(Dispatchers.Main) {
+                            updateAdapter()
+                        }
+
                     } catch (ex: java.lang.Exception) {
                         Log.i("asd", "asd")
                     }
                 }
             }
-        }
+        }!!
 
         todo_list.layoutManager = LinearLayoutManager(activity)
         todo_list.addItemDecoration(
@@ -105,6 +109,12 @@ class TodosFragment : Fragment(), CoroutineScope {
             )
         )
         todo_list.adapter = adapter
+
+        updateAdapter()
+    }
+
+    fun updateAdapter() {
+        adapter.tasks = todoController.getTodoWithHeaders(todos)
 
         listVisibility()
     }
