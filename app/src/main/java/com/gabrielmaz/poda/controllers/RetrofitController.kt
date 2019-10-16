@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitController {
     const val baseUrl = "https://android-todos-api.herokuapp.com"
-    var accessToken: String? = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3LCJleHBpcmVzX29uIjoiMjAxOS0xMC0xNyAyMToyMzo1OSArMDAwMCIsImV4cCI6MTU3MTM0NzQ0MH0.nG1EHMjrzD1RF27mmjY8Gc3Csi0jnqYxakl0Ca4yafk"
+    var accessToken: String? = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMCwiZXhwaXJlc19vbiI6IjIwMTktMTAtMTcgMjI6MzY6MTAgKzAwMDAiLCJleHAiOjE1NzEzNTE3NzF9._cGTXqsXtI191hHrHRpB0Qa8BWzi1A8pSSlgGXxWyTw"
 //    var accessToken: String? = null
 
     val retrofit: Retrofit = Retrofit.Builder()

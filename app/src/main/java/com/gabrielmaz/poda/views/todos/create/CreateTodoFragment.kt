@@ -59,7 +59,7 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
         super.onViewCreated(view, savedInstanceState)
         val calendar = Calendar.getInstance()
 
-        val picker = DatePickerDialog(activity, DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+        val picker = DatePickerDialog(activity, R.style.DatePickerTheme, DatePickerDialog.OnDateSetListener { _: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
             val newDate = Calendar.getInstance()
             newDate.set(year, monthOfYear, dayOfMonth)
             due_date.setText(sdf.format(newDate.time))

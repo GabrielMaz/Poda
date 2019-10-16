@@ -41,9 +41,6 @@ class TodoListAdapter(
         }
     }
 
-    /**
-     *
-     */
     override fun getItemViewType(position: Int): Int {
         return if (data[position].header != null) HEADER_TYPE else TODO_TYPE
     }
