@@ -1,11 +1,13 @@
 package com.gabrielmaz.poda.views.todos.create
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.DatePicker
 import androidx.fragment.app.Fragment
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.adapters.CategorySpinnerAdapter
@@ -21,6 +23,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.threeten.bp.ZonedDateTime
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 
 class CreateTodoFragment : Fragment(), CoroutineScope {
@@ -34,6 +39,8 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
     private var listener: OnFragmentInteractionListener? = null
 
     private lateinit var categories: ArrayList<Category>
+
+    private val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.US)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +57,14 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val calendar = Calendar.getInstance()
+
+        val picker = DatePickerDialog(activity, DatePickerDialog.OnDateSetListener { datePicker: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+            val newDate = Calendar.getInstance()
+            newDate.set(year, monthOfYear, dayOfMonth)
+            due_date.setText(sdf.format(newDate.time))
+
+        },calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
 
         create_loading.setIndeterminateDrawable(FadingCircle())
 
@@ -68,6 +83,10 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
         } else {
             categories_loading.visible()
             loadCategories()
+        }
+
+        due_date.setOnClickListener {
+            picker.show()
         }
 
         create_button.setOnClickListener {
@@ -100,6 +119,7 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
 
             withContext(Dispatchers.Main) {
                 if (categories.isNotEmpty()) {
+                    categories_text.visible()
                     categories_spinner.visible()
                     categories_loading.gone()
 

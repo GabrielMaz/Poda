@@ -30,5 +30,8 @@
     <string name="title_activity_create_todo">CreateTodoActivity</string>
     <string name="create_todo">Create</string>
     <string name="description">Description</string>
+    <string name="priority">Priority</string>
+    <string name="category">Category</string>
+    <string name="due_date">Due date</string>
 
 </resources>
