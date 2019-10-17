@@ -27,7 +27,7 @@
         <activity android:name=".views.login.LoginActivity" />
         <activity android:name=".views.signup.SignupActivity" />
         <activity android:name=".views.MainActivity" />
-        <activity android:name=".views.categories.CategoryActivity" />
+        <activity android:name=".views.categories.CategoryActivity" android:theme="@style/AppThemeNoActionBar" />
         <activity android:name=".views.todos.create.CreateTodoActivity"/>
     </application>
 

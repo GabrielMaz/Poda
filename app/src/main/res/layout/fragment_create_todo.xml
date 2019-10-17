@@ -50,7 +50,7 @@
 
         <Spinner
             android:id="@+id/priorities_spinner"
-            style="@style/spinner_style"
+            style="@style/SpinnerStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -75,7 +75,7 @@
 
         <Spinner
             android:id="@+id/categories_spinner"
-            style="@style/spinner_style"
+            style="@style/SpinnerStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"

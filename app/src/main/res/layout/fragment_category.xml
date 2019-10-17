@@ -23,20 +23,20 @@
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:elevation="2dp"
-                android:scaleType="centerInside"/>
+                android:scaleType="centerInside" />
 
 
         </RelativeLayout>
 
         <TextView
             android:id="@+id/category_name"
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
-            tools:text="Shopping"
             android:textColor="@color/blue"
-            android:textSize="36sp"/>
+            android:textSize="36sp"
+            tools:text="Shopping" />
 
     </LinearLayout>
 

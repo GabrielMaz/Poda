@@ -9,6 +9,15 @@
         <item name="buttonStyle">@style/ButtonStyle</item>
     </style>
 
+    <!-- No action bar theme. -->
+    <style name="AppThemeNoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryDark">@color/dark_blue</item>
+        <item name="colorAccent">@color/light_blue</item>
+        <item name="buttonStyle">@style/ButtonStyle</item>
+    </style>
+
     <!-- Base application theme. -->
 
     <style name="ButtonStyle" parent="Widget.AppCompat.Button">
@@ -31,7 +40,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="spinner_style">
+    <style name="SpinnerStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/arrow</item>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -89,6 +90,20 @@ class CategoryFragment : Fragment() {
         } else {
             category_list.visible()
             category_emptyview.gone()
+        }
+    }
+
+    fun sortList(indexSort: Int) {
+        when (indexSort) {
+            0 -> {
+                Toast.makeText(activity, R.string.priority, Toast.LENGTH_SHORT).show()
+            }
+            1 -> {
+                Toast.makeText(activity, R.string.due_date, Toast.LENGTH_SHORT).show()
+            }
+            2 -> {
+                Toast.makeText(activity, R.string.creation_date, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
