@@ -12,16 +12,14 @@ import androidx.fragment.app.Fragment
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.adapters.CategorySpinnerAdapter
 import com.gabrielmaz.poda.controllers.CategoryController
+import com.gabrielmaz.poda.controllers.TodoController
 import com.gabrielmaz.poda.helpers.gone
 import com.gabrielmaz.poda.helpers.textString
 import com.gabrielmaz.poda.helpers.visible
 import com.gabrielmaz.poda.models.Category
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_create_todo.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.threeten.bp.ZonedDateTime
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,11 +28,13 @@ import kotlin.coroutines.CoroutineContext
 
 class CreateTodoFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
+        get() = Dispatchers.Main + job
 
+    private val job = Job()
     private var selectedCategory: Category? = null
 
     private var categoryController = CategoryController()
+    private val todoController = TodoController()
 
     private var listener: OnFragmentInteractionListener? = null
 
@@ -59,12 +59,19 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
         super.onViewCreated(view, savedInstanceState)
         val calendar = Calendar.getInstance()
 
-        val picker = DatePickerDialog(activity, R.style.DatePickerTheme, DatePickerDialog.OnDateSetListener { _: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
-            val newDate = Calendar.getInstance()
-            newDate.set(year, monthOfYear, dayOfMonth)
-            due_date.setText(sdf.format(newDate.time))
+        val picker = DatePickerDialog(
+            activity,
+            R.style.DatePickerTheme,
+            DatePickerDialog.OnDateSetListener { _: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+                val newDate = Calendar.getInstance()
+                newDate.set(year, monthOfYear, dayOfMonth)
+                due_date.setText(sdf.format(newDate.time))
 
-        },calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
 
         create_loading.setIndeterminateDrawable(FadingCircle())
 
@@ -91,12 +98,17 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
 
         create_button.setOnClickListener {
             val category = selectedCategory ?: categories_spinner.selectedItem as Category
-            listener?.onTodoSubmit(
-                description.textString(),
-                category.id,
-                priorities_spinner.selectedItem as String,
-                ZonedDateTime.now()
-            )
+            launch(Dispatchers.IO) {
+                todoController.createTodo(
+                    description.textString(),
+                    category.id,
+                    priorities_spinner.selectedItem as String,
+                    ZonedDateTime.now()
+                )
+                withContext(Dispatchers.Main) {
+                    listener?.onTodoSubmit()
+                }
+            }
         }
     }
 
@@ -109,8 +121,15 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
         }
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        job.cancel()
+    }
+
     interface OnFragmentInteractionListener {
-        fun onTodoSubmit(description: String, categoryId: Int, priority: String, dueDate: ZonedDateTime)
+        fun onTodoSubmit(
+
+        )
     }
 
     private fun loadCategories() {

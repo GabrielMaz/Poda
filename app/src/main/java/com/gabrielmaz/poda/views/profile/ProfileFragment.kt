@@ -23,10 +23,7 @@ import com.gabrielmaz.poda.views.MainActivity
 import com.gabrielmaz.poda.views.login.LoginActivity
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_profile.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -37,8 +34,9 @@ import kotlin.coroutines.CoroutineContext
 
 class ProfileFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
+        get() = Dispatchers.Main + job
 
+    private val job = Job()
     private val authController = AuthController()
     private val userController = UserController()
     private val todoController = TodoController()
@@ -92,6 +90,7 @@ class ProfileFragment : Fragment(), CoroutineScope {
 
     override fun onDetach() {
         super.onDetach()
+        job.cancel()
         listener = null
     }
 

@@ -19,17 +19,15 @@ import com.gabrielmaz.poda.views.login.LoginFragment
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_signup.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 class SignupFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
+        get() = Dispatchers.Main + job
 
+    private val job = Job()
     private val authController = AuthController()
     private var listener: OnFragmentInteractionListener? = null
 
@@ -68,6 +66,7 @@ class SignupFragment : Fragment(), CoroutineScope {
 
     override fun onDetach() {
         super.onDetach()
+        job.cancel()
         listener = null
     }
 

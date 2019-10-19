@@ -26,17 +26,11 @@ import com.gabrielmaz.poda.views.profile.ProfileFragment
 import com.gabrielmaz.poda.views.todos.TodosFragment
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
-class MainActivity : AppCompatActivity(), CoroutineScope,
+class MainActivity : AppCompatActivity(),
     ProfileFragment.OnFragmentInteractionListener {
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
 
     lateinit var todos: ArrayList<Todo>
     lateinit var categories: ArrayList<Category>

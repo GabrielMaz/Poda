@@ -7,15 +7,13 @@ import com.gabrielmaz.poda.controllers.TodoController
 import com.gabrielmaz.poda.models.Category
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
 import kotlin.coroutines.CoroutineContext
 
-class CreateTodoActivity : AppCompatActivity(), CoroutineScope, CreateTodoFragment.OnFragmentInteractionListener {
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
-
-    private val todoController = TodoController()
+class CreateTodoActivity : AppCompatActivity(),
+    CreateTodoFragment.OnFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +21,7 @@ class CreateTodoActivity : AppCompatActivity(), CoroutineScope, CreateTodoFragme
 
         if (savedInstanceState == null) {
             val category = intent.getParcelableExtra<Category>("category")
-            title = "Create a ${category?.name?: "new"} todo"
+            title = "Create a ${category?.name ?: "new"} todo"
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.container, CreateTodoFragment.newInstance(category), null)
@@ -31,10 +29,7 @@ class CreateTodoActivity : AppCompatActivity(), CoroutineScope, CreateTodoFragme
         }
     }
 
-    override fun onTodoSubmit(description: String, categoryId: Int, priority: String, dueDate: ZonedDateTime) {
-        launch(Dispatchers.IO) {
-            todoController.createTodo(description, categoryId, priority, dueDate)
-            finish()
-        }
+    override fun onTodoSubmit() {
+        finish()
     }
 }

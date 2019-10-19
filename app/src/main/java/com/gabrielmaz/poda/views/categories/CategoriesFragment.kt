@@ -18,16 +18,14 @@ import com.gabrielmaz.poda.views.MainActivity
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class CategoriesFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
+        get() = Dispatchers.Main + job
 
+    private val job = Job()
     private var todosController = TodoController()
     private var categoryController = CategoryController()
 
@@ -48,6 +46,11 @@ class CategoriesFragment : Fragment(), CoroutineScope {
         categories_loading.setIndeterminateDrawable(FadingCircle())
 
         load()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        job.cancel()
     }
 
     private fun load() {

@@ -18,16 +18,14 @@ import com.gabrielmaz.poda.views.todos.create.CreateTodoActivity
 import com.gabrielmaz.todolist.adapters.TodoListAdapter
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_todos.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 class TodosFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
+        get() = Dispatchers.Main + job
 
+    private val job = Job()
     private val todoController = TodoController()
 
     private lateinit var todos: ArrayList<Todo>
@@ -53,6 +51,11 @@ class TodosFragment : Fragment(), CoroutineScope {
         }
 
         load()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        job.cancel()
     }
 
     private fun listVisibility() {

@@ -27,17 +27,15 @@ import com.gabrielmaz.poda.views.todos.TodosFragment
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import kotlin.collections.ArrayList
 import kotlin.coroutines.CoroutineContext
 
 class HomeFragment : Fragment(), CoroutineScope {
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main
+        get() = Dispatchers.Main + job
 
+    private val job = Job()
     private val userController = UserController()
     private val categoryController = CategoryController()
     private val todoController = TodoController()
@@ -64,6 +62,11 @@ class HomeFragment : Fragment(), CoroutineScope {
         home_loading.setIndeterminateDrawable(FadingCircle())
 
         load()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        job.cancel()
     }
 
     private fun generateList() {

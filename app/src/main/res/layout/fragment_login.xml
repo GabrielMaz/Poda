@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginStart="@dimen/horizontal_margin"
     android:layout_marginTop="@dimen/vertical_margin"
     android:layout_marginEnd="@dimen/horizontal_margin"
@@ -33,29 +33,17 @@
 
         <EditText
             android:id="@+id/login_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/shape_round_background_white"
-            android:elevation="2dp"
+            style="@style/input"
             android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:padding="10dp" />
+            android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/login_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            style="@style/input"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="5dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/shape_round_background_white"
-            android:elevation="2dp"
             android:hint="@string/password"
-            android:inputType="textPassword"
-            android:padding="10dp" />
+            android:inputType="textPassword" />
 
         <Button
             android:id="@+id/login_button"
@@ -70,10 +58,10 @@
             android:id="@+id/login_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/signup"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:textColor="@color/light_blue"/>
+            android:text="@string/signup"
+            android:textColor="@color/light_blue" />
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/login_loading"
@@ -81,9 +69,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:SpinKit_Color="@color/blue"
+            android:layout_margin="10dp"
             android:visibility="gone"
-            android:layout_margin="10dp"/>
+            app:SpinKit_Color="@color/blue" />
 
     </LinearLayout>
 
