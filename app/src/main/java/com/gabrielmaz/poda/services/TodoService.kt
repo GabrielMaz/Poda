@@ -2,7 +2,7 @@ package com.gabrielmaz.poda.services
 
 import com.gabrielmaz.poda.models.Todo
 import com.gabrielmaz.poda.services.request.TodoRequest
-import com.gabrielmaz.poda.services.response.SuccessReponse
+import com.gabrielmaz.poda.services.response.SuccessResponse
 import retrofit2.http.*
 
 interface TodoService {
@@ -16,7 +16,7 @@ interface TodoService {
     suspend fun createTodo(
         @Header("Content-Type") contentType: String,
         @Body todoRequest: TodoRequest
-    ): SuccessReponse
+    ): Todo
 
     @PUT("todos/{id}")
     suspend fun updateTodo(
@@ -24,5 +24,5 @@ interface TodoService {
         @Header("Content-Type") contentType: String,
         @Path("id") id: Int,
         @Body todoRequest: TodoRequest
-    ): SuccessReponse
+    ): SuccessResponse
 }

@@ -1,5 +1,6 @@
 package com.gabrielmaz.poda.controllers
 
+import com.gabrielmaz.poda.helpers.sameDayAs
 import com.gabrielmaz.poda.models.Todo
 import com.gabrielmaz.poda.models.TodoListItem
 import com.gabrielmaz.poda.services.TodoService
@@ -12,7 +13,7 @@ class TodoController {
     suspend fun getTodos() =
         todoService.getTodos(RetrofitController.accessToken, "application/json")
 
-    suspend fun createTodo(description: String, categoryId: Int, priority: String, dueDate: ZonedDateTime) {
+    suspend fun createTodo(description: String, categoryId: Int, priority: String, dueDate: ZonedDateTime): Todo {
         val todoRequest = TodoRequest(
             priority,
             description,
@@ -20,7 +21,7 @@ class TodoController {
             false,
             categoryId
         )
-        todoService.createTodo(
+        return todoService.createTodo(
             "application/json",
             todoRequest
         )
@@ -71,7 +72,7 @@ class TodoController {
         var currentDate: ZonedDateTime? = null
 
         todosSorted.forEach { todo ->
-            if (currentDate == null || (todo.dueDate.year != currentDate!!.year || todo.dueDate.dayOfYear != currentDate!!.dayOfYear)) {
+            if (currentDate == null || !currentDate!!.sameDayAs(todo.dueDate)) {
                 val header = TodoListItem(null, todo.dueDate)
                 result.add(header)
 

@@ -23,7 +23,6 @@ class TodoListAdapter(
         get() = data
         set(value) {
             data = value
-            notifyDataSetChanged()
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

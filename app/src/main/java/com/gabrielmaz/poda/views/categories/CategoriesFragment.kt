@@ -59,12 +59,14 @@ class CategoriesFragment : Fragment(), CoroutineScope {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == MODIFY_CATEGORY) {
             data?.getParcelableArrayListExtra<Todo>(CategoryActivity.modifiedTodosTag)?.let { modifiedTodos ->
-                val updatedTodos = todos.map { oldTodo ->
-                    val newTodo = modifiedTodos.find { it.id == oldTodo.id }
-                    newTodo?: oldTodo
+                modifiedTodos.forEach { newTodo ->
+                    val existingTodoIndex = todos.indexOfFirst { oldTodo -> oldTodo.id == newTodo.id }
+                    if (existingTodoIndex != -1) {
+                        todos[existingTodoIndex] = newTodo
+                    } else {
+                        todos.add(newTodo)
+                    }
                 }
-                // TODO newly inserted todos
-                todos = ArrayList(updatedTodos)
             }
         }
     }

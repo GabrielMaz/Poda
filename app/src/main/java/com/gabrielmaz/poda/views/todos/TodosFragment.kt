@@ -1,5 +1,6 @@
 package com.gabrielmaz.poda.views.todos
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import com.gabrielmaz.poda.helpers.visible
 import com.gabrielmaz.poda.models.Todo
 import com.gabrielmaz.poda.views.todos.create.CreateTodoActivity
 import com.gabrielmaz.poda.adapters.TodoListAdapter
+import com.gabrielmaz.poda.helpers.sameDayAs
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_todos.*
 import kotlinx.coroutines.*
@@ -46,11 +48,39 @@ class TodosFragment : Fragment(), CoroutineScope {
         create_todo_button.setOnClickListener {
             context?.let {
                 val intent = Intent(it, CreateTodoActivity::class.java)
-                it.startActivity(intent)
+                startActivityForResult(intent, CREATE_TODO)
             }
         }
 
         load()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == CREATE_TODO && resultCode == Activity.RESULT_OK) {
+            data?.getParcelableExtra<Todo>(CreateTodoActivity.createdTodoTag)?.let { newTodo ->
+                todos.add(newTodo)
+
+                val header = adapter.tasks.find {
+                    it.header?.sameDayAs(newTodo.dueDate)?: false
+                }
+                adapter.tasks = todoController.getTodosWithHeaders(todos)
+                val insertedTodoIndex = adapter.tasks.indexOfFirst { todoItem ->
+                    todoItem.todo == newTodo
+                }
+                adapter.notifyItemInserted(insertedTodoIndex)
+
+                if (header == null) {
+                    val insertedHeaderIndex = adapter.tasks.indexOfFirst {
+                        it.header?.sameDayAs(newTodo.dueDate)?: false
+                    }
+                    if (insertedHeaderIndex != -1) {
+                        adapter.notifyItemInserted(insertedHeaderIndex)
+                    }
+                }
+            }
+        }
     }
 
     override fun onDetach() {
@@ -105,6 +135,7 @@ class TodosFragment : Fragment(), CoroutineScope {
 
     private fun updateAdapter() {
         adapter.tasks = todoController.getTodosWithHeaders(todos)
+        adapter.notifyDataSetChanged()
 
         listVisibility()
     }
@@ -117,5 +148,9 @@ class TodosFragment : Fragment(), CoroutineScope {
             todo_list.visible()
             todo_emptyview.gone()
         }
+    }
+
+    companion object {
+        const val CREATE_TODO = 1000
     }
 }
