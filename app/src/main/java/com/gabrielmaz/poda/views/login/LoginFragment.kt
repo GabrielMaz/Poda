@@ -56,7 +56,6 @@ class LoginFragment : Fragment(), CoroutineScope {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        job.cancel()
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
@@ -66,6 +65,7 @@ class LoginFragment : Fragment(), CoroutineScope {
 
     override fun onDetach() {
         super.onDetach()
+        job.cancel()
         listener = null
     }
 
