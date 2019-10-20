@@ -1,5 +1,6 @@
 package com.gabrielmaz.poda.views.categories
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -82,8 +83,8 @@ class CategoryFragment : Fragment(), CoroutineScope {
         category_button.setOnClickListener {
             context?.let {
                 val intent = Intent(it, CreateTodoActivity::class.java)
-                intent.putExtra("category", category)
-                it.startActivity(intent)
+                intent.putExtra(CreateTodoActivity.categoryTag, category)
+                startActivityForResult(intent, CREATE_TODO)
             }
         }
     }
@@ -94,6 +95,23 @@ class CategoryFragment : Fragment(), CoroutineScope {
             listener = context
         } else {
             throw RuntimeException("$context must implement OnFragmentInteractionListener")
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == CREATE_TODO && resultCode == Activity.RESULT_OK) {
+            data?.getParcelableExtra<Todo>(CreateTodoActivity.createdTodoTag)?.let { newTodo ->
+                todos.add(newTodo)
+                listener?.todoListUpdated(todos)
+
+                adapter.tasks = todoController.getTodosWithoutHeaders(todos)
+                val insertedTodoIndex = adapter.tasks.indexOfFirst { todoItem ->
+                    todoItem.todo == newTodo
+                }
+                adapter.notifyItemInserted(insertedTodoIndex)
+            }
         }
     }
 
@@ -151,7 +169,7 @@ class CategoryFragment : Fragment(), CoroutineScope {
         CreationDate
     }
 
-    var sortOption: SortOption? = null
+    private var sortOption: SortOption? = null
 
     private fun sortListAux(option: SortOption) {
         sortOption = option
@@ -185,6 +203,7 @@ class CategoryFragment : Fragment(), CoroutineScope {
     }
 
     companion object {
+        const val CREATE_TODO = 1420
         const val sortOptionTag = "sortOption"
         const val todosTag = "todosTag"
         const val categoryTag = "categoryTag"

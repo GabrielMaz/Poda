@@ -23,7 +23,7 @@ class CreateTodoActivity : AppCompatActivity(),
         setContentView(R.layout.activity_create_todo)
 
         if (savedInstanceState == null) {
-            val category = intent.getParcelableExtra<Category>("category")
+            val category = intent.getParcelableExtra<Category>(categoryTag)
             title = "Create a ${category?.name ?: "new"} todo"
             supportFragmentManager
                 .beginTransaction()
@@ -42,6 +42,7 @@ class CreateTodoActivity : AppCompatActivity(),
     }
 
     companion object {
+        const val categoryTag = "category"
         const val createdTodoTag = "createTodo"
     }
 }
