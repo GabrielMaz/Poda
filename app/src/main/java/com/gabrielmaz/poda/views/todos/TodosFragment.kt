@@ -15,7 +15,7 @@ import com.gabrielmaz.poda.helpers.gone
 import com.gabrielmaz.poda.helpers.visible
 import com.gabrielmaz.poda.models.Todo
 import com.gabrielmaz.poda.views.todos.create.CreateTodoActivity
-import com.gabrielmaz.todolist.adapters.TodoListAdapter
+import com.gabrielmaz.poda.adapters.TodoListAdapter
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_todos.*
 import kotlinx.coroutines.*
@@ -29,7 +29,7 @@ class TodosFragment : Fragment(), CoroutineScope {
     private val todoController = TodoController()
 
     private lateinit var todos: ArrayList<Todo>
-    lateinit var adapter: TodoListAdapter
+    private lateinit var adapter: TodoListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,16 +58,6 @@ class TodosFragment : Fragment(), CoroutineScope {
         job.cancel()
     }
 
-    private fun listVisibility() {
-        if (todos.isEmpty()) {
-            todo_list.gone()
-            todo_emptyview.visible()
-        } else {
-            todo_list.visible()
-            todo_emptyview.gone()
-        }
-    }
-
     private fun load() {
         launch(Dispatchers.IO) {
             try {
@@ -85,18 +75,15 @@ class TodosFragment : Fragment(), CoroutineScope {
     }
 
     private fun setList() {
-
         adapter = context?.let {
-            TodoListAdapter(todoController.getTodoWithHeaders(todos)) { todo ->
+            TodoListAdapter(todoController.getTodosWithHeaders(todos)) { todo ->
                 launch(Dispatchers.IO) {
                     try {
-
                         todoController.updateTodo(todo, todo.id)
 
                         withContext(Dispatchers.Main) {
                             updateAdapter()
                         }
-
                     } catch (ex: java.lang.Exception) {
                         Log.i("asd", "asd")
                     }
@@ -116,9 +103,19 @@ class TodosFragment : Fragment(), CoroutineScope {
         updateAdapter()
     }
 
-    fun updateAdapter() {
-        adapter.tasks = todoController.getTodoWithHeaders(todos)
+    private fun updateAdapter() {
+        adapter.tasks = todoController.getTodosWithHeaders(todos)
 
         listVisibility()
+    }
+
+    private fun listVisibility() {
+        if (todos.isEmpty()) {
+            todo_list.gone()
+            todo_emptyview.visible()
+        } else {
+            todo_list.visible()
+            todo_emptyview.gone()
+        }
     }
 }

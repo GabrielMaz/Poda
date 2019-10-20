@@ -1,6 +1,5 @@
-package com.gabrielmaz.todolist.adapters
+package com.gabrielmaz.poda.adapters
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.view.LayoutInflater
@@ -26,8 +25,6 @@ class TodoListAdapter(
             data = value
             notifyDataSetChanged()
         }
-    private val HEADER_TYPE = 0
-    private val TODO_TYPE = 1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == HEADER_TYPE) {
@@ -75,10 +72,7 @@ class TodoListAdapter(
             val header = row.header!!
             holder.day.text = header.dayOfWeek.toString()
 
-            holder.date.text = "${header.dayOfMonth}" +
-                    " ${header.month}" +
-                    ", ${header.year}"
-
+            holder.date.text = "${header.dayOfMonth} ${header.month}, ${header.year}"
         }
     }
 
@@ -92,5 +86,10 @@ class TodoListAdapter(
         val description: TextView = mView.item_description
         val priority: TextView = mView.item_priority
         val category: View = mView.item_category
+    }
+
+    companion object {
+        const val HEADER_TYPE = 0
+        const val TODO_TYPE = 1
     }
 }

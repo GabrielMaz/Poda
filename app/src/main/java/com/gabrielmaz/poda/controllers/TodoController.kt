@@ -27,7 +27,6 @@ class TodoController {
     }
 
     suspend fun updateTodo(todo: Todo, id: Int) {
-
         val todoRequest = TodoRequest(
             todo.priority,
             todo.description,
@@ -64,29 +63,27 @@ class TodoController {
         return tasksCompleted
     }
 
-    fun getTodoWithHeaders(todos: List<Todo>): ArrayList<TodoListItem> {
+    fun getTodosWithHeaders(todos: List<Todo>): ArrayList<TodoListItem> {
         val result = ArrayList<TodoListItem>()
 
-        if (todos.isNotEmpty()) {
+        val todosSorted = todos.sortedBy { t -> t.id }.sortedBy { t -> t.dueDate }
 
-            val todosSorted = todos.sortedBy { t -> t.id }.sortedBy { t -> t.dueDate }
+        var currentDate: ZonedDateTime? = null
 
-            var currentDate: ZonedDateTime? = null
+        todosSorted.forEach { todo ->
+            if (currentDate == null || (todo.dueDate.year != currentDate!!.year || todo.dueDate.dayOfYear != currentDate!!.dayOfYear)) {
+                val header = TodoListItem(null, todo.dueDate)
+                result.add(header)
 
-            todosSorted.forEach { todo ->
-
-                if (currentDate == null || (todo.dueDate.year != currentDate!!.year || todo.dueDate.dayOfYear != currentDate!!.dayOfYear)) {
-                    val header = TodoListItem(null, todo.dueDate)
-                    result.add(header)
-
-                    currentDate = todo.dueDate
-                }
-
-                val todoRow = TodoListItem(todo, null)
-                result.add(todoRow)
+                currentDate = todo.dueDate
             }
+
+            val todoRow = TodoListItem(todo, null)
+            result.add(todoRow)
         }
 
         return result
     }
+
+    fun getTodosWithoutHeaders(todos: List<Todo>) = ArrayList(todos.map { todo -> TodoListItem(todo, null) })
 }

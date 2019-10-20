@@ -1,7 +1,10 @@
 package com.gabrielmaz.poda.views.categories
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,21 +19,43 @@ import com.gabrielmaz.poda.helpers.gone
 import com.gabrielmaz.poda.helpers.visible
 import com.gabrielmaz.poda.models.Category
 import com.gabrielmaz.poda.models.Todo
-import com.gabrielmaz.poda.models.TodoListItem
 import com.gabrielmaz.poda.views.todos.create.CreateTodoActivity
-import com.gabrielmaz.todolist.adapters.TodoListAdapter
+import com.gabrielmaz.poda.adapters.TodoListAdapter
+import com.gabrielmaz.poda.controllers.TodoController
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.fragment_category.*
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-class CategoryFragment : Fragment() {
+class CategoryFragment : Fragment(), CoroutineScope {
+    interface OnFragmentInteractionListener {
+        fun todoListUpdated(todos: ArrayList<Todo>)
+    }
 
-    private var todos = ArrayList<Todo>()
-    private var category: Category? = null
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+    private val job = Job()
+    private val todoController = TodoController()
+    private var listener: OnFragmentInteractionListener? = null
+
+
+    private lateinit var category: Category
+    private lateinit var todos: ArrayList<Todo>
+    private lateinit var adapter: TodoListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        category = arguments?.getParcelable(categoryTag)!!
         todos = arguments?.getParcelableArrayList(todosTag) ?: arrayListOf()
-        category = arguments?.getParcelable(categoryTag)
+
+        val savedSortOption = savedInstanceState?.getParcelable<SortOption>(sortOptionTag)
+        if (savedSortOption != null) {
+            sortListAux(savedSortOption)
+        } else {
+            sortListAux(SortOption.CreationDate)
+        }
     }
 
     override fun onCreateView(
@@ -43,11 +68,11 @@ class CategoryFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        category_name.text = category?.name ?: ""
+        category_name.text = category.name
 
         Glide
-            .with(this@CategoryFragment)
-            .load("${RetrofitController.baseUrl}/${category?.photo}")
+            .with(this)
+            .load("${RetrofitController.baseUrl}/${category.photo}")
             .centerCrop()
             .placeholder(R.drawable.ic_placeholder)
             .into(category_image)
@@ -57,19 +82,38 @@ class CategoryFragment : Fragment() {
         category_button.setOnClickListener {
             context?.let {
                 val intent = Intent(it, CreateTodoActivity::class.java)
-                if (category != null) {
-                    intent.putExtra("category", category)
-                }
+                intent.putExtra("category", category)
                 it.startActivity(intent)
             }
         }
     }
 
-    private fun setList() {
-
-        val adapter = context?.let {
-            TodoListAdapter(ArrayList(todos.map { todo -> TodoListItem(todo, null) })) {}
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentInteractionListener) {
+            listener = context
+        } else {
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
+    }
+
+    private fun setList() {
+        adapter = context?.let {
+            TodoListAdapter(todoController.getTodosWithoutHeaders(todos)) { todo ->
+                launch(Dispatchers.IO) {
+                    try {
+                        todoController.updateTodo(todo, todo.id)
+
+                        withContext(Dispatchers.Main) {
+                            listener?.todoListUpdated(todos)
+                            updateAdapter()
+                        }
+                    } catch (ex: java.lang.Exception) {
+                        Log.i("asd", "asd")
+                    }
+                }
+            }
+        }!!
 
         category_list.layoutManager = LinearLayoutManager(activity)
         category_list.addItemDecoration(
@@ -79,6 +123,12 @@ class CategoryFragment : Fragment() {
             )
         )
         category_list.adapter = adapter
+
+        listVisibility()
+    }
+
+    private fun updateAdapter() {
+        adapter.tasks = todoController.getTodosWithoutHeaders(todos)
 
         listVisibility()
     }
@@ -93,24 +143,55 @@ class CategoryFragment : Fragment() {
         }
     }
 
-    fun sortList(indexSort: Int) {
-        when (indexSort) {
-            0 -> {
-                Toast.makeText(activity, R.string.priority, Toast.LENGTH_SHORT).show()
+    @Parcelize
+    enum class SortOption : Parcelable {
+        Priority,
+        DueDate,
+        CreationDate
+    }
+
+    var sortOption: SortOption? = null
+
+    private fun sortListAux(option: SortOption) {
+        sortOption = option
+        when (option) {
+            SortOption.Priority -> {
+                todos.sortBy { priorityOrderMap[it?.priority]?: 999 }
             }
-            1 -> {
-                Toast.makeText(activity, R.string.due_date, Toast.LENGTH_SHORT).show()
+            SortOption.DueDate -> {
+                todos.sortBy { it?.dueDate }
             }
-            2 -> {
-                Toast.makeText(activity, R.string.creation_date, Toast.LENGTH_SHORT).show()
+            SortOption.CreationDate -> {
+                todos.sortBy { it?.createdAt }
             }
         }
     }
 
-    companion object {
+    fun sortList(option: SortOption) {
+        sortListAux(option)
+        updateAdapter()
+    }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putParcelable(sortOptionTag, sortOption)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        job.cancel()
+    }
+
+    companion object {
+        const val sortOptionTag = "sortOption"
         const val todosTag = "todosTag"
         const val categoryTag = "categoryTag"
+        val priorityOrderMap = mapOf(
+            "HIGH" to 0,
+            "MEDIUM" to 1,
+            "LOW" to 2
+        )
 
         @JvmStatic
         fun newInstance(todos: ArrayList<Todo>, category: Category) =
