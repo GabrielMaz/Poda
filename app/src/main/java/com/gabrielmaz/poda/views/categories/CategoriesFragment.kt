@@ -1,5 +1,7 @@
 package com.gabrielmaz.poda.views.categories
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -53,6 +55,20 @@ class CategoriesFragment : Fragment(), CoroutineScope {
         job.cancel()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == MODIFY_CATEGORY) {
+            data?.getParcelableArrayListExtra<Todo>(CategoryActivity.modifiedTodosTag)?.let { modifiedTodos ->
+                val updatedTodos = todos.map { oldTodo ->
+                    val newTodo = modifiedTodos.find { it.id == oldTodo.id }
+                    newTodo?: oldTodo
+                }
+                // TODO newly inserted todos
+                todos = ArrayList(updatedTodos)
+            }
+        }
+    }
+
     private fun load() {
         launch(Dispatchers.IO) {
             todos = todosController.getTodos()
@@ -65,10 +81,24 @@ class CategoriesFragment : Fragment(), CoroutineScope {
                 if (categories.isNotEmpty()) {
                     categories_grid.visible()
 
-                    categories_grid.adapter =
-                        activity?.let { CategoryGridAdapter(categories, it, todos) }
+                    categories_grid.adapter = context?.let {
+                        CategoryGridAdapter(categories, it) { category ->
+                            val list = arrayListOf<Todo>()
+                            list.addAll(todos.filter { todo -> todo.categoryId == category.id })
+
+                            val intent = Intent(it, CategoryActivity::class.java)
+                            intent.putParcelableArrayListExtra(CategoryActivity.todosTag, list)
+                            intent.putExtra(CategoryActivity.categoryTag, category)
+
+                            startActivityForResult(intent, MODIFY_CATEGORY)
+                        }
+                    }
                 }
             }
         }
+    }
+
+    companion object {
+        const val MODIFY_CATEGORY = 1005
     }
 }

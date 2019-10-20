@@ -17,14 +17,14 @@ import kotlinx.android.synthetic.main.item_category.view.*
 class CategoryGridAdapter(
     private var categoryList: ArrayList<Category>,
     private var context: Context,
-    private var todos: ArrayList<Todo>
+    private var onCategorySelected: (Category) -> Unit
 ) :
     BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val item = this.categoryList[position]
 
-        val inflator = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val view = inflator.inflate(R.layout.item_category, null)
+        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val view = inflater.inflate(R.layout.item_category, null)
 
         view.item_category_text.text = item.name
 
@@ -36,14 +36,8 @@ class CategoryGridAdapter(
             .into(view.item_category_photo)
 
         view.category_item.setOnClickListener {
-            val list = arrayListOf<Todo>()
-            list.addAll(todos.filter { it.categoryId == item.id })
-
-            val intent = Intent(context, CategoryActivity::class.java)
-            intent.putParcelableArrayListExtra(CategoryActivity.todosTag, list)
-            intent.putExtra(CategoryActivity.categoryTag, item)
-            context.startActivity(intent)
-
+            val category = categoryList.find { it.id == item.id }
+            category?.let { onCategorySelected(it) }
         }
 
         return view

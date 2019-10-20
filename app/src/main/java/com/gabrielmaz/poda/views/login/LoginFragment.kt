@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.controllers.AuthController
+import com.gabrielmaz.poda.helpers.gone
 import com.gabrielmaz.poda.helpers.hideKeyboard
 import com.gabrielmaz.poda.helpers.textString
 import com.gabrielmaz.poda.helpers.visible
@@ -74,6 +75,7 @@ class LoginFragment : Fragment(), CoroutineScope {
 
         if (email == "" || password == "") {
             Toast.makeText(activity, "Empty fields", Toast.LENGTH_SHORT).show()
+            login_loading.gone()
         } else {
             launch(Dispatchers.IO) {
                 try {
@@ -98,7 +100,6 @@ class LoginFragment : Fragment(), CoroutineScope {
     }
 
     interface OnFragmentInteractionListener {
-
         fun onFragmentInteraction(email: String, password: String)
     }
 
