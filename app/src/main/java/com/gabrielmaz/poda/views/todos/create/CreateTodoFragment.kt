@@ -21,7 +21,10 @@ import com.gabrielmaz.poda.models.Todo
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_create_todo.*
 import kotlinx.coroutines.*
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.format.DateTimeFormatter
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -99,11 +102,12 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
         create_button.setOnClickListener {
             val category = selectedCategory ?: categories_spinner.selectedItem as Category
             launch(Dispatchers.IO) {
+                val localDate = LocalDate.parse(due_date.textString(), DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.US))
                 val newTodo = todoController.createTodo(
                     description.textString(),
                     category.id,
                     priorities_spinner.selectedItem as String,
-                    ZonedDateTime.now()
+                    localDate.atStartOfDay(ZoneId.systemDefault())
                 )
                 withContext(Dispatchers.Main) {
                     listener?.onTodoSubmit(newTodo)
