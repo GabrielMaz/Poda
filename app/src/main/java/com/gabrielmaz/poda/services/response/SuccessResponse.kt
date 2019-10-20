@@ -1,5 +1,5 @@
 package com.gabrielmaz.poda.services.response
 
-data class SuccessReponse(
+data class SuccessResponse(
     val success: Boolean
 )

@@ -17,6 +17,7 @@ import com.gabrielmaz.poda.helpers.gone
 import com.gabrielmaz.poda.helpers.textString
 import com.gabrielmaz.poda.helpers.visible
 import com.gabrielmaz.poda.models.Category
+import com.gabrielmaz.poda.models.Todo
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_create_todo.*
 import kotlinx.coroutines.*
@@ -66,7 +67,6 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
                 val newDate = Calendar.getInstance()
                 newDate.set(year, monthOfYear, dayOfMonth)
                 due_date.setText(sdf.format(newDate.time))
-
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -99,14 +99,14 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
         create_button.setOnClickListener {
             val category = selectedCategory ?: categories_spinner.selectedItem as Category
             launch(Dispatchers.IO) {
-                todoController.createTodo(
+                val newTodo = todoController.createTodo(
                     description.textString(),
                     category.id,
                     priorities_spinner.selectedItem as String,
                     ZonedDateTime.now()
                 )
                 withContext(Dispatchers.Main) {
-                    listener?.onTodoSubmit()
+                    listener?.onTodoSubmit(newTodo)
                 }
             }
         }
@@ -127,9 +127,7 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
     }
 
     interface OnFragmentInteractionListener {
-        fun onTodoSubmit(
-
-        )
+        fun onTodoSubmit(todo: Todo)
     }
 
     private fun loadCategories() {

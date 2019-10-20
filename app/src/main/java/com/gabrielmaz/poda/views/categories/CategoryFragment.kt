@@ -129,6 +129,7 @@ class CategoryFragment : Fragment(), CoroutineScope {
 
     private fun updateAdapter() {
         adapter.tasks = todoController.getTodosWithoutHeaders(todos)
+        adapter.notifyDataSetChanged()
 
         listVisibility()
     }
