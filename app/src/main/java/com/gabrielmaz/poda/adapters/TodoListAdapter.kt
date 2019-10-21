@@ -52,6 +52,10 @@ class TodoListAdapter(
             holder.check.isChecked = todo.completed
             holder.description.text = todo.description
             holder.priority.text = todo.priority
+            holder.dueDate.text =
+                "${todo.dueDate.dayOfMonth}-${todo.dueDate.month.value}-${todo.dueDate.year}"
+            holder.creationDate.text =
+                "${todo.createdAt.dayOfMonth}-${todo.createdAt.month.value}-${todo.createdAt.year}"
 
             holder.category.setBackgroundColor(Color.parseColor(todo.category.color))
 
@@ -90,6 +94,8 @@ class TodoListAdapter(
         val description: TextView = mView.item_description
         val priority: TextView = mView.item_priority
         val category: View = mView.item_category
+        val dueDate: TextView = mView.item_due_date
+        val creationDate: TextView = mView.item_creation_date
     }
 
     companion object {

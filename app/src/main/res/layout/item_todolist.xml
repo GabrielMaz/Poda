@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="1dp"
+    android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <View
@@ -21,8 +22,9 @@
         android:layout_marginEnd="8dp" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:orientation="vertical"
         android:paddingStart="8dp"
         android:paddingTop="12dp"
@@ -34,6 +36,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="2"
             android:textColor="@color/itemDescription"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -46,6 +51,67 @@
             android:textColor="@color/itemPriority"
             android:textSize="14sp"
             tools:text="High Priority" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/item_dates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="3dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="3"
+                android:text="@string/due_date_short"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/item_due_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:textColor="@color/itemDescription"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="12/12/2019" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="3dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="3"
+                android:text="@string/creation_date_short"
+                android:textColor="@color/itemDescription"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/item_creation_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:textColor="@color/itemDescription"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="20/10/2019" />
+        </LinearLayout>
 
     </LinearLayout>
 
