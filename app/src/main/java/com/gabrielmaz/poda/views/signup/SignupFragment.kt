@@ -1,9 +1,7 @@
 package com.gabrielmaz.poda.views.signup
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +9,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.controllers.AuthController
+import com.gabrielmaz.poda.helpers.gone
 import com.gabrielmaz.poda.helpers.hideKeyboard
 import com.gabrielmaz.poda.helpers.textString
 import com.gabrielmaz.poda.helpers.visible
-import com.gabrielmaz.poda.views.MainActivity
-import com.gabrielmaz.poda.views.login.LoginFragment
 import com.github.ybq.android.spinkit.style.FadingCircle
-import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_signup.*
 import kotlinx.coroutines.*
 import java.lang.Exception
@@ -45,13 +41,11 @@ class SignupFragment : Fragment(), CoroutineScope {
         signup_loading.setIndeterminateDrawable(FadingCircle())
 
         signup_button.setOnClickListener {
-            signup_password_confirmation.hideKeyboard()
-            signup_loading.visible()
-            signupButton()
+            signupClicked()
         }
 
         signup_login.setOnClickListener {
-            loginButton()
+            loginClicked()
         }
     }
 
@@ -70,7 +64,9 @@ class SignupFragment : Fragment(), CoroutineScope {
         listener = null
     }
 
-    private fun signupButton() {
+    private fun signupClicked() {
+        signup_password_confirmation.hideKeyboard()
+
         val name = signup_name.textString()
         val email = signup_email.textString()
         val password = signup_password.textString()
@@ -81,50 +77,38 @@ class SignupFragment : Fragment(), CoroutineScope {
             || password == ""
             || passwordConfirmation == ""
         ) {
-
+            Toast.makeText(activity, "Empty fields", Toast.LENGTH_SHORT).show()
         } else if (password != passwordConfirmation) {
-
+            Toast.makeText(activity, "Passwords do not match", Toast.LENGTH_SHORT).show()
         } else {
-
+            signup_loading.visible()
             launch(Dispatchers.IO) {
                 try {
                     authController.signup(name, email, password, passwordConfirmation)
                     withContext(Dispatchers.Main) {
-                        activity?.let {
-                            it.startActivity(Intent(it, MainActivity::class.java))
-                            it.finish()
-                        }
+                        listener?.onSignupSuccess(
+                            signup_name.textString(),
+                            signup_email.textString(),
+                            signup_password.textString()
+                        )
+                        signup_loading.gone()
                     }
                 } catch (exception: Exception) {
-                    Log.i("signup", exception.message)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(activity, exception.message, Toast.LENGTH_LONG).show()
+                        signup_loading.gone()
+                    }
                 }
             }
-
-
-            listener?.onFragmentInteraction(
-                signup_name.textString(),
-                signup_email.textString(),
-                signup_password.textString()
-            )
         }
     }
 
-    private fun loginButton() {
-        listener?.onFragmentInteraction("", "", "")
+    private fun loginClicked() {
+        listener?.onLoginClicked()
     }
 
     interface OnFragmentInteractionListener {
-
-        fun onFragmentInteraction(name: String, email: String, password: String)
-    }
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LoginFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
+        fun onSignupSuccess(name: String, email: String, password: String)
+        fun onLoginClicked()
     }
 }

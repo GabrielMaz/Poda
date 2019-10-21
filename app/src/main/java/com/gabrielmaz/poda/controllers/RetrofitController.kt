@@ -12,8 +12,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitController {
     const val baseUrl = "https://android-todos-api.herokuapp.com"
-    var accessToken: String? = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMCwiZXhwaXJlc19vbiI6IjIwMTktMTAtMjEgMTY6MDE6NDYgKzAwMDAiLCJleHAiOjE1NzE2NzM3MDd9.Lop_9KkUL35mgU1DsH43lioZ0xnW-U0qVjkDr-kKwIU"
-//    var accessToken: String? = null
+//    var accessToken: String? = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMCwiZXhwaXJlc19vbiI6IjIwMTktMTAtMjEgMTY6MDE6NDYgKzAwMDAiLCJleHAiOjE1NzE2NzM3MDd9.Lop_9KkUL35mgU1DsH43lioZ0xnW-U0qVjkDr-kKwIU"
+    var accessToken: String? = null
 
     val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
@@ -34,7 +34,7 @@ object RetrofitController {
             .addInterceptor { chain ->
                 val response = chain.proceed(chain.request())
 
-                if (response.code() in 400..499) {
+                if (response.code() == 401) {
                     App.goToLoginScreen()
                 }
 

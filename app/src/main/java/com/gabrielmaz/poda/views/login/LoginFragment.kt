@@ -1,9 +1,7 @@
 package com.gabrielmaz.poda.views.login
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +13,6 @@ import com.gabrielmaz.poda.helpers.gone
 import com.gabrielmaz.poda.helpers.hideKeyboard
 import com.gabrielmaz.poda.helpers.textString
 import com.gabrielmaz.poda.helpers.visible
-import com.gabrielmaz.poda.views.MainActivity
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.*
@@ -43,13 +40,11 @@ class LoginFragment : Fragment(), CoroutineScope {
         login_loading.setIndeterminateDrawable(FadingCircle())
 
         login_button.setOnClickListener {
-            login_password.hideKeyboard()
-            login_loading.visible()
-            loginButton()
+            loginClicked()
         }
 
         login_signup.setOnClickListener {
-            signupButton()
+            signupClicked()
         }
     }
 
@@ -68,47 +63,40 @@ class LoginFragment : Fragment(), CoroutineScope {
         listener = null
     }
 
-    private fun loginButton() {
+    private fun loginClicked() {
+        login_password.hideKeyboard()
+
+
         val email = login_email.textString()
         val password = login_password.textString()
 
         if (email == "" || password == "") {
             Toast.makeText(activity, "Empty fields", Toast.LENGTH_SHORT).show()
-            login_loading.gone()
         } else {
+            login_loading.visible()
             launch(Dispatchers.IO) {
                 try {
                     authController.login(email, password)
                     withContext(Dispatchers.Main) {
-                        activity?.let {
-                            it.startActivity(Intent(it, MainActivity::class.java))
-                            it.finish()
-                        }
+                        listener?.onLoginSuccess()
+                        login_loading.gone()
                     }
                 } catch (exception: Exception) {
-                    Log.i("login", exception.message)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(activity, exception.message, Toast.LENGTH_LONG).show()
+                        login_loading.gone()
+                    }
                 }
             }
-
-            listener?.onFragmentInteraction(login_email.textString(), login_password.textString())
         }
     }
 
-    private fun signupButton() {
-        listener?.onFragmentInteraction("", "")
+    private fun signupClicked() {
+        listener?.onSignupClicked()
     }
 
     interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(email: String, password: String)
-    }
-
-    companion object {
-
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LoginFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
+        fun onLoginSuccess()
+        fun onSignupClicked()
     }
 }

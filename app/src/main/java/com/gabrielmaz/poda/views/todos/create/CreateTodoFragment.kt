@@ -43,6 +43,7 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
     private var listener: OnFragmentInteractionListener? = null
 
     private lateinit var categories: ArrayList<Category>
+    private lateinit var picker: DatePickerDialog
 
     private val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.US)
 
@@ -63,7 +64,7 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
         super.onViewCreated(view, savedInstanceState)
         val calendar = Calendar.getInstance()
 
-        val picker = DatePickerDialog(
+        picker = DatePickerDialog(
             activity,
             R.style.DatePickerTheme,
             DatePickerDialog.OnDateSetListener { _: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
@@ -128,6 +129,7 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
     override fun onDetach() {
         super.onDetach()
         job.cancel()
+        listener = null
     }
 
     interface OnFragmentInteractionListener {

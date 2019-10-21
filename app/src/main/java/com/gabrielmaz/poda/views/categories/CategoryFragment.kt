@@ -98,6 +98,12 @@ class CategoryFragment : Fragment(), CoroutineScope {
         }
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        job.cancel()
+        listener = null
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -190,11 +196,6 @@ class CategoryFragment : Fragment(), CoroutineScope {
         super.onSaveInstanceState(outState)
 
         outState.putParcelable(sortOptionTag, sortOption)
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        job.cancel()
     }
 
     companion object {
