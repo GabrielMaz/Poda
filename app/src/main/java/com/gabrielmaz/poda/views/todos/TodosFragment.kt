@@ -80,6 +80,7 @@ class TodosFragment : Fragment(), CoroutineScope {
                         adapter.notifyItemInserted(insertedHeaderIndex)
                     }
                 }
+                listVisibility()
             }
         }
     }

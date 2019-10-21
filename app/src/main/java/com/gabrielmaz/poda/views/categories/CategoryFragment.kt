@@ -117,6 +117,8 @@ class CategoryFragment : Fragment(), CoroutineScope {
                     todoItem.todo == newTodo
                 }
                 adapter.notifyItemInserted(insertedTodoIndex)
+
+                listVisibility()
             }
         }
     }
