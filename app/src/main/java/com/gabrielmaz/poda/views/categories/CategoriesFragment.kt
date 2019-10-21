@@ -38,7 +38,6 @@ class CategoriesFragment : Fragment(), CoroutineScope {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_categories, container, false)
     }
 

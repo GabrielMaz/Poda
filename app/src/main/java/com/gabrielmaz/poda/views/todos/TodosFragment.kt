@@ -112,7 +112,8 @@ class TodosFragment : Fragment(), CoroutineScope {
                         todoController.updateTodo(todo, todo.id)
 
                         withContext(Dispatchers.Main) {
-                            updateAdapter()
+                            adapter.tasks = todoController.getTodosWithHeaders(todos)
+                            adapter.notifyItemChanged(adapter.tasks.indexOfFirst { it.todo?.id == todo.id })
                         }
                     } catch (ex: java.lang.Exception) {
                         Log.i("asd", "asd")
@@ -129,13 +130,6 @@ class TodosFragment : Fragment(), CoroutineScope {
             )
         )
         todo_list.adapter = adapter
-
-        updateAdapter()
-    }
-
-    private fun updateAdapter() {
-        adapter.tasks = todoController.getTodosWithHeaders(todos)
-        adapter.notifyDataSetChanged()
 
         listVisibility()
     }
