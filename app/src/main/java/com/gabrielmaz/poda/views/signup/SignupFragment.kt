@@ -81,6 +81,7 @@ class SignupFragment : Fragment(), CoroutineScope {
         } else if (password != passwordConfirmation) {
             Toast.makeText(activity, "Passwords do not match", Toast.LENGTH_SHORT).show()
         } else {
+            signup_button.isClickable = false
             signup_loading.visible()
             launch(Dispatchers.IO) {
                 try {
@@ -92,11 +93,13 @@ class SignupFragment : Fragment(), CoroutineScope {
                             signup_password.textString()
                         )
                         signup_loading.gone()
+                        signup_button.isClickable = true
                     }
                 } catch (exception: Exception) {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(activity, exception.message, Toast.LENGTH_LONG).show()
                         signup_loading.gone()
+                        signup_button.isClickable = true
                     }
                 }
             }

@@ -90,9 +90,11 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
         priorities_spinner.adapter = prioritiesAdapter
 
         if (selectedCategory != null) {
-            categories_loading.gone()
+            create_loading.gone()
+            create_button.isClickable = true
         } else {
-            categories_loading.visible()
+            create_button.isClickable = false
+            create_loading.visible()
             loadCategories()
         }
 
@@ -101,9 +103,14 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
         }
 
         create_button.setOnClickListener {
+            create_button.isClickable = false
+            create_loading.visible()
             val category = selectedCategory ?: categories_spinner.selectedItem as Category
             launch(Dispatchers.IO) {
-                val localDate = LocalDate.parse(due_date.textString(), DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.US))
+                val localDate = LocalDate.parse(
+                    due_date.textString(),
+                    DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.US)
+                )
                 val newTodo = todoController.createTodo(
                     description.textString(),
                     category.id,
@@ -111,6 +118,8 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
                     localDate.atStartOfDay(ZoneId.systemDefault())
                 )
                 withContext(Dispatchers.Main) {
+                    create_loading.gone()
+                    create_button.isClickable = true
                     listener?.onTodoSubmit(newTodo)
                 }
             }
@@ -144,10 +153,10 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
                 if (categories.isNotEmpty()) {
                     categories_text.visible()
                     categories_spinner.visible()
-                    categories_loading.gone()
-
                     categories_spinner.adapter =
                         activity?.let { CategorySpinnerAdapter(it, categories) }
+                    create_loading.gone()
+                    create_button.isClickable = true
                 }
             }
         }
