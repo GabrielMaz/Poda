@@ -99,15 +99,6 @@
             android:focusable="false"
             android:hint="@string/due_date" />
 
-        <com.github.ybq.android.spinkit.SpinKitView
-            android:id="@+id/categories_loading"
-            style="@style/SpinKitView.WanderingCubes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            app:SpinKit_Color="@color/blue" />
-
         <Button
             android:id="@+id/create_button"
             android:layout_width="match_parent"
@@ -117,7 +108,6 @@
             android:layout_marginEnd="5dp"
             android:text="@string/create_todo" />
 
-
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/create_loading"
             style="@style/SpinKitView.WanderingCubes"
@@ -125,7 +115,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:visibility="gone"
             app:SpinKit_Color="@color/blue" />
 
     </LinearLayout>

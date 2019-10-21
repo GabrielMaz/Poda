@@ -74,6 +74,7 @@ class LoginFragment : Fragment(), CoroutineScope {
         if (email == "" || password == "") {
             Toast.makeText(activity, "Empty fields", Toast.LENGTH_SHORT).show()
         } else {
+            login_button.isClickable = false
             login_loading.visible()
             launch(Dispatchers.IO) {
                 try {
@@ -81,6 +82,7 @@ class LoginFragment : Fragment(), CoroutineScope {
                     withContext(Dispatchers.Main) {
                         listener?.onLoginSuccess()
                         login_loading.gone()
+                        login_button.isClickable = true
                     }
                 } catch (exception: Exception) {
                     withContext(Dispatchers.Main) {
@@ -90,6 +92,7 @@ class LoginFragment : Fragment(), CoroutineScope {
                         }
                         Toast.makeText(activity, toastMessage, Toast.LENGTH_LONG).show()
                         login_loading.gone()
+                        login_button.isClickable = true
                     }
 
                 }

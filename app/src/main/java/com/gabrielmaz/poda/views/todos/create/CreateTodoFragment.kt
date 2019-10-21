@@ -92,9 +92,11 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
         priorities_spinner.adapter = prioritiesAdapter
 
         if (selectedCategory != null) {
-            categories_loading.gone()
+            create_loading.gone()
+            create_button.isClickable = true
         } else {
-            categories_loading.visible()
+            create_button.isClickable = false
+            create_loading.visible()
             loadCategories()
         }
 
@@ -103,6 +105,8 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
         }
 
         create_button.setOnClickListener {
+            create_button.isClickable = false
+            create_loading.visible()
             val messages = ArrayList<String>()
 
             if (description.textString() == "") messages.add("Description is required")
@@ -110,12 +114,16 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
             if (selectedCategory == null && categories_spinner.selectedItem == null) messages.add("Category is required")
 
             if (messages.isNotEmpty()) {
-                Toast.makeText(activity, messages.joinToString(separator = "\n"), Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, messages.joinToString(separator = "\n"), Toast.LENGTH_LONG)
+                    .show()
             } else {
                 val category = selectedCategory ?: categories_spinner.selectedItem as Category
                 launch(Dispatchers.IO) {
                     try {
-                        val localDate = LocalDate.parse(due_date.textString(), DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.US))
+                        val localDate = LocalDate.parse(
+                            due_date.textString(),
+                            DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.US)
+                        )
                         val newTodo = todoController.createTodo(
                             description.textString(),
                             category.id,
@@ -123,11 +131,16 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
                             localDate.atStartOfDay(ZoneId.systemDefault())
                         )
                         withContext(Dispatchers.Main) {
+                            create_loading.gone()
+                            create_button.isClickable = true
                             listener?.onTodoSubmit(newTodo)
                         }
                     } catch (exception: Exception) {
                         withContext(Dispatchers.Main) {
-                            Toast.makeText(activity, R.string.connection_error, Toast.LENGTH_LONG).show()
+                            create_loading.gone()
+                            create_button.isClickable = true
+                            Toast.makeText(activity, R.string.connection_error, Toast.LENGTH_LONG)
+                                .show()
                         }
                     }
                 }
@@ -163,15 +176,19 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
                     if (categories.isNotEmpty()) {
                         categories_text.visible()
                         categories_spinner.visible()
-                        categories_loading.gone()
-
                         categories_spinner.adapter =
                             activity?.let { CategorySpinnerAdapter(it, categories) }
+                        create_loading.gone()
+                        create_button.isClickable = true
                     }
                 }
             } catch (exception: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(activity, R.string.category_fetch_error, Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        activity,
+                        R.string.category_fetch_error,
+                        Toast.LENGTH_LONG
+                    ).show()
                     activity?.finish()
                 }
             }
