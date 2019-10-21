@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.gabrielmaz.poda.R
 import com.gabrielmaz.poda.adapters.CategorySpinnerAdapter
@@ -106,16 +107,17 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
         create_button.setOnClickListener {
             create_button.isClickable = false
             create_loading.visible()
-            val category = selectedCategory ?: categories_spinner.selectedItem as Category
             val messages = ArrayList<String>()
 
             if (description.textString() == "") messages.add("Description is required")
             if (due_date.textString() == "") messages.add("Due date is required")
+            if (selectedCategory == null && categories_spinner.selectedItem == null) messages.add("Category is required")
 
             if (messages.isNotEmpty()) {
                 Toast.makeText(activity, messages.joinToString(separator = "\n"), Toast.LENGTH_LONG)
                     .show()
             } else {
+                val category = selectedCategory ?: categories_spinner.selectedItem as Category
                 launch(Dispatchers.IO) {
                     try {
                         val localDate = LocalDate.parse(

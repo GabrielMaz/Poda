@@ -9,6 +9,8 @@
     <string name="signup">Sign up</string>
     <string name="name">Name</string>
     <string name="logout">logout</string>
+    <string name="invalid_signup_format">Request failed. Please make sure to provide a valid email and password</string>
+    <string name="invalid_user">Wrong email or password</string>
     <string name="connection_error">Connection Error</string>
     <string name="category_fetch_error">Connection Error while fetching categories. Please try again</string>
 

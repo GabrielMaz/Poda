@@ -16,6 +16,7 @@ import com.gabrielmaz.poda.helpers.visible
 import com.github.ybq.android.spinkit.style.FadingCircle
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.*
+import retrofit2.HttpException
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
@@ -85,10 +86,15 @@ class LoginFragment : Fragment(), CoroutineScope {
                     }
                 } catch (exception: Exception) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(activity, R.string.connection_error, Toast.LENGTH_LONG).show()
+                        var toastMessage = R.string.connection_error
+                        if (exception is HttpException && exception.code() == 401) {
+                            toastMessage = R.string.invalid_user
+                        }
+                        Toast.makeText(activity, toastMessage, Toast.LENGTH_LONG).show()
                         login_loading.gone()
                         login_button.isClickable = true
                     }
+
                 }
             }
         }
