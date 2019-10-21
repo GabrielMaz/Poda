@@ -184,6 +184,8 @@ class CreateTodoFragment : Fragment(), CoroutineScope {
                 }
             } catch (exception: Exception) {
                 withContext(Dispatchers.Main) {
+                    create_loading.gone()
+                    create_button.isClickable = true
                     Toast.makeText(
                         activity,
                         R.string.category_fetch_error,
