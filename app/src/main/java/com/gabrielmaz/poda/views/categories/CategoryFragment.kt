@@ -124,7 +124,8 @@ class CategoryFragment : Fragment(), CoroutineScope {
 
                         withContext(Dispatchers.Main) {
                             listener?.todoListUpdated(todos)
-                            updateAdapter()
+                            adapter.tasks = todoController.getTodosWithoutHeaders(todos)
+                            adapter.notifyItemChanged(adapter.tasks.indexOfFirst { it.todo?.id == todo.id })
                         }
                     } catch (ex: java.lang.Exception) {
                         Log.i("asd", "asd")
@@ -141,13 +142,6 @@ class CategoryFragment : Fragment(), CoroutineScope {
             )
         )
         category_list.adapter = adapter
-
-        listVisibility()
-    }
-
-    private fun updateAdapter() {
-        adapter.tasks = todoController.getTodosWithoutHeaders(todos)
-        adapter.notifyDataSetChanged()
 
         listVisibility()
     }
@@ -188,7 +182,8 @@ class CategoryFragment : Fragment(), CoroutineScope {
 
     fun sortList(option: SortOption) {
         sortListAux(option)
-        updateAdapter()
+        adapter.tasks = todoController.getTodosWithoutHeaders(todos)
+        adapter.notifyDataSetChanged()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

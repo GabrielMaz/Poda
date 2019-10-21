@@ -60,6 +60,11 @@ class TodoListAdapter(
                     holder.description.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 holder.priority.paintFlags =
                     holder.priority.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            } else {
+                holder.description.paintFlags =
+                    holder.description.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                holder.priority.paintFlags =
+                    holder.priority.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
 
             holder.check.setOnClickListener {
