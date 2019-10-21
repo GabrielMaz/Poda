@@ -31,7 +31,6 @@ class SignupFragment : Fragment(), CoroutineScope {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_signup, container, false)
     }
 
@@ -95,7 +94,7 @@ class SignupFragment : Fragment(), CoroutineScope {
                     }
                 } catch (exception: Exception) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(activity, exception.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(activity, R.string.connection_error, Toast.LENGTH_LONG).show()
                         signup_loading.gone()
                     }
                 }

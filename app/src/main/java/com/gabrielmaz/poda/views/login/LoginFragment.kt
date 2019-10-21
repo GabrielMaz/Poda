@@ -83,7 +83,7 @@ class LoginFragment : Fragment(), CoroutineScope {
                     }
                 } catch (exception: Exception) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(activity, exception.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(activity, R.string.connection_error, Toast.LENGTH_LONG).show()
                         login_loading.gone()
                     }
                 }
