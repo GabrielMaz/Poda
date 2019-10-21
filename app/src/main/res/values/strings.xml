@@ -19,7 +19,8 @@
     <string name="creation_date">Creation date</string>
 
     // TodosFragment
-    <string name="fragment_todos_empty_view">You don\'t have any TODOs yet. \n  Press the Button to create your first one.</string>
+    <string name="fragment_todos_empty_view">You don\'t have any TODOs yet. \n Press the Button to create your first one.</string>
+    <string name="fragment_todos_empty_view_home">You don\'t have any TODOs yet. \n</string>
 
     // ProfileFragment
     <string name="profile_joined_on">Joined on</string>
