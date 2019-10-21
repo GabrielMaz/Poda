@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.gabrielmaz.poda.R
@@ -70,7 +71,6 @@ class HomeFragment : Fragment(), CoroutineScope {
     }
 
     private fun generateList() {
-
         list = ArrayList()
 
         totalTasks.forEach { task ->
@@ -89,7 +89,6 @@ class HomeFragment : Fragment(), CoroutineScope {
                 totalTasks = todoController.getTotalTasks(todos)
                 completedTasks = todoController.getCompletedTasks(todos)
                 generateList()
-
 
                 withContext(Dispatchers.Main) {
                     home_name.text = user.name
@@ -111,15 +110,16 @@ class HomeFragment : Fragment(), CoroutineScope {
                         home_grid.visible()
 
                         home_grid.adapter = activity?.let { HomeGridAdapter(list, it) }
-
                     } else {
                         home_emptyview.visible()
                         home_grid.gone()
                     }
                 }
-
             } catch (exception: Exception) {
-                Log.i("asd", "asd")
+                withContext(Dispatchers.Main) {
+                    home_loading.gone()
+                    Toast.makeText(activity, R.string.connection_error, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

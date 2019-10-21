@@ -62,7 +62,6 @@ class ProfileFragment : Fragment(), CoroutineScope {
         super.onViewCreated(view, savedInstanceState)
 
         if (savedInstanceState == null) {
-
             profile_loading_logout.setIndeterminateDrawable(FadingCircle())
             profile_loading.setIndeterminateDrawable(FadingCircle())
 
@@ -155,7 +154,10 @@ class ProfileFragment : Fragment(), CoroutineScope {
                 }
 
             } catch (exception: Exception) {
-                Log.i("asd", "asd")
+                withContext(Dispatchers.Main) {
+                    profile_loading.gone()
+                    Toast.makeText(activity, R.string.connection_error, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -206,22 +208,16 @@ class ProfileFragment : Fragment(), CoroutineScope {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(activity, "Ready", Toast.LENGTH_SHORT).show()
                 }
-            } catch (exception: java.lang.Exception) {
-                Toast.makeText(activity, "Exception", Toast.LENGTH_SHORT).show()
+            } catch (exception: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(activity, R.string.connection_error, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
 
     companion object {
-
         const val LOAD_IMAGE = "LOAD_IMAGE"
         const val LOAD_DATA = "LOAD_DATA"
-
-        @JvmStatic
-        fun newInstance() =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
     }
 }

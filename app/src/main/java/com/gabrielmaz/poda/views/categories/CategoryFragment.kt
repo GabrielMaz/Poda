@@ -133,8 +133,10 @@ class CategoryFragment : Fragment(), CoroutineScope {
                             adapter.tasks = todoController.getTodosWithoutHeaders(todos)
                             adapter.notifyItemChanged(adapter.tasks.indexOfFirst { it.todo?.id == todo.id })
                         }
-                    } catch (ex: java.lang.Exception) {
-                        Log.i("asd", "asd")
+                    } catch (exception: Exception) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(activity, "Connection Error", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
             }

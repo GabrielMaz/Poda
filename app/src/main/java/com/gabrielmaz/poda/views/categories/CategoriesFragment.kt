@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentController
 import com.gabrielmaz.poda.R
@@ -72,28 +73,34 @@ class CategoriesFragment : Fragment(), CoroutineScope {
 
     private fun load() {
         launch(Dispatchers.IO) {
-            todos = todosController.getTodos()
-            categories = categoryController.getCategories()
+            try {
+                todos = todosController.getTodos()
+                categories = categoryController.getCategories()
 
-            withContext(Dispatchers.Main) {
+                withContext(Dispatchers.Main) {
+                    categories_loading.gone()
 
-                categories_loading.gone()
+                    if (categories.isNotEmpty()) {
+                        categories_grid.visible()
 
-                if (categories.isNotEmpty()) {
-                    categories_grid.visible()
+                        categories_grid.adapter = context?.let {
+                            CategoryGridAdapter(categories, it) { category ->
+                                val list = arrayListOf<Todo>()
+                                list.addAll(todos.filter { todo -> todo.categoryId == category.id })
 
-                    categories_grid.adapter = context?.let {
-                        CategoryGridAdapter(categories, it) { category ->
-                            val list = arrayListOf<Todo>()
-                            list.addAll(todos.filter { todo -> todo.categoryId == category.id })
+                                val intent = Intent(it, CategoryActivity::class.java)
+                                intent.putParcelableArrayListExtra(CategoryActivity.todosTag, list)
+                                intent.putExtra(CategoryActivity.categoryTag, category)
 
-                            val intent = Intent(it, CategoryActivity::class.java)
-                            intent.putParcelableArrayListExtra(CategoryActivity.todosTag, list)
-                            intent.putExtra(CategoryActivity.categoryTag, category)
-
-                            startActivityForResult(intent, MODIFY_CATEGORY)
+                                startActivityForResult(intent, MODIFY_CATEGORY)
+                            }
                         }
                     }
+                }
+            } catch (exception: Exception) {
+                withContext(Dispatchers.Main) {
+                    categories_loading.gone()
+                    Toast.makeText(activity, R.string.connection_error, Toast.LENGTH_LONG).show()
                 }
             }
         }

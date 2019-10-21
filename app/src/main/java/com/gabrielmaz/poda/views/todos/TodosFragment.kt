@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -97,9 +98,11 @@ class TodosFragment : Fragment(), CoroutineScope {
                     todo_loading.gone()
                     setList()
                 }
-
             } catch (exception: Exception) {
-                Log.i("asd", "asd")
+                withContext(Dispatchers.Main) {
+                    todo_loading.gone()
+                    Toast.makeText(activity, R.string.connection_error, Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
@@ -115,8 +118,10 @@ class TodosFragment : Fragment(), CoroutineScope {
                             adapter.tasks = todoController.getTodosWithHeaders(todos)
                             adapter.notifyItemChanged(adapter.tasks.indexOfFirst { it.todo?.id == todo.id })
                         }
-                    } catch (ex: java.lang.Exception) {
-                        Log.i("asd", "asd")
+                    } catch (exception: Exception) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(activity, R.string.connection_error, Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
             }
